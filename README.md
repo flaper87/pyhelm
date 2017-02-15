@@ -1,7 +1,10 @@
 # Armada
+
+[![Build Status](https://travis-ci.org/att-comdev/armada.svg?branch=master)](https://travis-ci.org/att-comdev/armada)
+
 A python orchestrator for a installing, upgrading, and managing a collection of helm charts, dependencies, and values overrides.
 
-Note that this project is pre-alpha and under active development. It may undergo drastic changes to support the long-term vision but contributions are welcome. 
+Note that this project is pre-alpha and under active development. It may undergo drastic changes to support the long-term vision but contributions are welcome.
 
 # Overview
 
@@ -26,13 +29,13 @@ The installation is fairly straight forward:
 To run armada, simply supply it with your YAML based intention for any number of charts:
 
 ```
- ~/armada-env/bin/aramda -c examples/aramda.conf
+ ~/armada-env/bin/aramda -c examples/armada.yaml
 ```
 
 Your output will look something like this:
 
 ```
-$ ~/armada-env/bin/armada -c examples/armada.yaml 
+$ ~/armada-env/bin/armada -c examples/armada.yaml
 2017-02-10 09:42:36,753 armada       INFO     Cloning git://github.com/att-comdev/openstack-helm/keystone for release keystone
 2017-02-10 09:42:39,238 armada       INFO     Building dependency chart common for release keystone
 2017-02-10 09:42:39,238 armada       INFO     Cloning git://github.com/att-comdev/openstack-helm/common for release None
@@ -59,15 +62,15 @@ endpoints: &endpoints
 And re-run armada, we will notice it will upgrade the keystone release, instead of install it on this pass, as well as report back the values changes as a unified diff.  A unified diff for any template changes would also be shown had those occurred.
 
 ```
-alan@hpdesktop:~/Workbench/att/attcomdev/armada$ /tmp/armada/bin/armada -c examples/armada.yaml 
+alan@hpdesktop:~/Workbench/att/attcomdev/armada$ /tmp/armada/bin/armada -c examples/armada.yaml
 2017-02-10 09:44:43,396 armada       INFO     Cloning git://github.com/att-comdev/openstack-helm/keystone for release keystone
 2017-02-10 09:44:47,640 armada       INFO     Building dependency chart common for release keystone
 2017-02-10 09:44:47,640 armada       INFO     Cloning git://github.com/att-comdev/openstack-helm/common for release None
 2017-02-10 09:44:49,701 armada       INFO     Upgrading release keystone
 2017-02-10 09:44:49,704 armada       INFO     Values Unified Diff (keystone)
---- 
+---
 
-+++ 
++++
 
 @@ -1,3 +1,3 @@
 
