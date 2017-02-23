@@ -1,16 +1,16 @@
-from hapi.services.tiller_pb2 import ReleaseServiceStub, ListReleasesRequest, InstallReleaseRequest, UpdateReleaseRequest
+from hapi.services.tiller_pb2 import ReleaseServiceStub, ListReleasesRequest, \
+    InstallReleaseRequest, UpdateReleaseRequest
 from hapi.chart.config_pb2 import Config
-from logutil import LOG
 from k8s import K8s
 import grpc
 
-TILLER_PORT=44134
-TILLER_VERSION=b'2.1.3'
-TILLER_TIMEOUT=300
+TILLER_PORT = 44134
+TILLER_VERSION = b'2.1.3'
+TILLER_TIMEOUT = 300
 
 class Tiller(object):
     '''
-    The Tiller class supports communication and requests to the Tiller Helm 
+    The Tiller class supports communication and requests to the Tiller Helm
     service over gRPC
     '''
 
@@ -27,14 +27,12 @@ class Tiller(object):
         # be fed at runtime as an override
         self.timeout = TILLER_TIMEOUT
 
-
     @property
     def metadata(self):
         '''
         Return tiller metadata for requests
         '''
         return [(b'x-helm-api-client', TILLER_VERSION)]
-
 
     def get_channel(self):
         '''
@@ -43,7 +41,6 @@ class Tiller(object):
         tiller_ip = self._get_tiller_ip()
         tiller_port = self._get_tiller_port()
         return grpc.insecure_channel('%s:%s' % (tiller_ip, tiller_port))
-
 
     def _get_tiller_pod(self):
         '''
@@ -55,7 +52,6 @@ class Tiller(object):
             if i.metadata.name.startswith('tiller-deploy'):
                 return i
 
-
     def _get_tiller_ip(self):
         '''
         Returns the tiller pod's IP address by searching all namespaces
@@ -63,11 +59,9 @@ class Tiller(object):
         pod = self._get_tiller_pod()
         return pod.status.pod_ip
 
-
     def _get_tiller_port(self):
         '''Stub method to support arbitrary ports in the future'''
         return TILLER_PORT
-
 
     def list_releases(self):
         '''
@@ -76,7 +70,6 @@ class Tiller(object):
         stub = ReleaseServiceStub(self.channel)
         req = ListReleasesRequest()
         return stub.ListReleases(req, self.timeout, metadata=self.metadata)
-
 
     def list_charts(self):
         '''
@@ -88,13 +81,15 @@ class Tiller(object):
         for x in self.list_releases():
             try:
                 latest_release = x.releases[-1]
-                charts.append((latest_release.name, latest_release.version, latest_release.chart, latest_release.config.raw))
+                charts.append((latest_release.name, latest_release.version,
+                               latest_release.chart,
+                               latest_release.config.raw))
             except IndexError:
                 continue
         return charts
 
-
-    def update_release(self, chart, dry_run, name, disable_hooks=False, values=None):
+    def update_release(self, chart, dry_run, name, disable_hooks=False,
+                       values=None):
         '''
         Update a Helm Release
         '''
@@ -112,8 +107,8 @@ class Tiller(object):
             disable_hooks=disable_hooks,
             values=values,
             name=name)
-        return stub.UpdateRelease(release_request, self.timeout, metadata=self.metadata)
-
+        return stub.UpdateRelease(release_request, self.timeout,
+                                  metadata=self.metadata)
 
     def install_release(self, chart, dry_run, name, namespace, values=None):
         '''
@@ -133,4 +128,6 @@ class Tiller(object):
             values=values,
             name=name,
             namespace=namespace)
-        return  stub.InstallRelease(release_request, self.timeout, metadata=self.metadata)
+        return stub.InstallRelease(release_request,
+                                   self.timeout,
+                                   metadata=self.metadata)
