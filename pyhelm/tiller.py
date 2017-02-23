@@ -93,11 +93,6 @@ class Tiller(object):
                 continue
         return charts
 
-    def get_release(self):
-        '''
-        Fetch a specific release
-        '''
-
 
     def update_release(self, chart, dry_run, name, disable_hooks=False, values=None):
         '''
