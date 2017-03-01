@@ -22,8 +22,9 @@ The installation is fairly straight forward:
 
 ```
  virtualenv --no-site-packages ~/armada-env
- ~/armada-env/bin/pip install -r ./requirements.txt
- ~/armada-env/bin/python ./setup.py install
+ source ~/armada-env/bin/activate
+ pip install -r ./requirements.txt
+ python ./setup.py install
  ```
 
 To run armada, simply supply it with your YAML based intention for any number of charts:
