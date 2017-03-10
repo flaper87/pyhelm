@@ -1,10 +1,9 @@
-# Armada
-
-[![Build Status](https://travis-ci.org/att-comdev/armada.svg?branch=master)](https://travis-ci.org/att-comdev/armada)
+# Armada [![Docker Repository on Quay](https://quay.io/repository/attcomdev/armada/status "Docker Repository on Quay")](https://quay.io/repository/attcomdev/armada) [![Build Status](https://travis-ci.org/att-comdev/armada.svg?branch=master)](https://travis-ci.org/att-comdev/armada)
 
 A python orchestrator for a installing, upgrading, and managing a collection of helm charts, dependencies, and values overrides.
 
 Note that this project is pre-alpha and under active development. It may undergo drastic changes to support the long-term vision but contributions are welcome.
+
 
 # Overview
 
@@ -15,6 +14,15 @@ Armada also supports fetching helm chart source and then building charts from so
 It will also give the operator some indication of what is about to change by assisting with diffs for both values, values overrides, and actual template changes.
 
 Its functionality may extend beyond helm, assisting in interacting with kubernetes directly to perform basic pre and post steps, such as removing completed or failed jobs, running backup jobs,  blocking on chart readiness, or deleting resources that do not support upgrades. However, primarily, it will be an interface to support orchestrating Helm.
+
+
+## Running Armada 
+
+To use this container, use these simple instructions:
+
+```
+docker run quay.io/attcomdev/armada:latest
+```
 
 # Installation
 
