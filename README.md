@@ -1,11 +1,14 @@
-# Armada [![Docker Repository on Quay](https://quay.io/repository/attcomdev/armada/status "Docker Repository on Quay")](https://quay.io/repository/attcomdev/armada) [![Build Status](https://travis-ci.org/att-comdev/armada.svg?branch=master)](https://travis-ci.org/att-comdev/armada)
+# Armada
+
+[![Docker Repository on Quay](https://quay.io/repository/attcomdev/armada/status "Docker Repository on Quay")](https://quay.io/repository/attcomdev/armada)
+[![Build Status](https://travis-ci.org/att-comdev/armada.svg?branch=master)](https://travis-ci.org/att-comdev/armada)
 
 A python orchestrator for a installing, upgrading, and managing a collection of helm charts, dependencies, and values overrides.
 
 Note that this project is pre-alpha and under active development. It may undergo drastic changes to support the long-term vision but contributions are welcome.
 
 
-# Overview
+## Overview
 
 The armada python library and command line tool provides a way to synchronize a helm (tiller) target with an operators intended state, consisting of several charts, dependencies, and overrides using a single file or directory with a collection of files. This allows operators to define many charts, potentially with different namespaces for those releases, and their overrides in a central place.  With a single command, deploy and/or upgrade them where applicable.
 
@@ -16,7 +19,7 @@ It will also give the operator some indication of what is about to change by ass
 Its functionality may extend beyond helm, assisting in interacting with kubernetes directly to perform basic pre and post steps, such as removing completed or failed jobs, running backup jobs,  blocking on chart readiness, or deleting resources that do not support upgrades. However, primarily, it will be an interface to support orchestrating Helm.
 
 
-## Running Armada 
+## Running Armada
 
 To use this container, use these simple instructions:
 
@@ -24,27 +27,48 @@ To use this container, use these simple instructions:
 docker run quay.io/attcomdev/armada:latest
 ```
 
-# Installation
+## Installation
 
 The installation is fairly straight forward:
 
-```
- virtualenv --no-site-packages ~/armada-env
- source ~/armada-env/bin/activate
- pip install -r ./requirements.txt
- python ./setup.py install
- ```
+Recomended Enviroment: Ubuntu 16.04
+
+### Installing Dependecies:
+
+you can run:
+
+* `tox testenv:ubuntu` or `sudo sh scripts/libgit2.sh`
+* `sudo pip install -r requirements.txt`
+
+NOTE: If you want to use virtualenv please refer to [pygit2](http://www.pygit2.org/install.html#libgit2-within-a-virtual-environment)
+
+### Installing armada:
+
+`sudo pip install -e .`
+
+`armada -h`
+
+## Using Armada
+
+Before using armada we need to check a few things:
+
+1. you have a properly configure `~/.kube/config`
+    * `kubectl config view`
+    * If it does not exist, you can create it using [kubectl](https://kubernetes.io/docs/user-guide/kubectl/kubectl_config/)
+
+1. Check that you have a running Tiller
+    * `kubectl get pods -n kube-system`
 
 To run armada, simply supply it with your YAML based intention for any number of charts:
 
 ```
- ~/armada-env/bin/aramda -c examples/armada.yaml
+aramda -c examples/armada.yaml
 ```
 
 Your output will look something like this:
 
 ```
-$ ~/armada-env/bin/armada -c examples/armada.yaml
+$ armada -c examples/armada.yaml
 2017-02-10 09:42:36,753 armada       INFO     Cloning git://github.com/att-comdev/openstack-helm/keystone for release keystone
 2017-02-10 09:42:39,238 armada       INFO     Building dependency chart common for release keystone
 2017-02-10 09:42:39,238 armada       INFO     Cloning git://github.com/att-comdev/openstack-helm/common for release None
@@ -71,7 +95,7 @@ endpoints: &endpoints
 And re-run armada, we will notice it will upgrade the keystone release, instead of install it on this pass, as well as report back the values changes as a unified diff.  A unified diff for any template changes would also be shown had those occurred.
 
 ```
-alan@hpdesktop:~/Workbench/att/attcomdev/armada$ /tmp/armada/bin/armada -c examples/armada.yaml
+alan@hpdesktop:~/Workbench/att/attcomdev/armada$ armada -c examples/armada.yaml
 2017-02-10 09:44:43,396 armada       INFO     Cloning git://github.com/att-comdev/openstack-helm/keystone for release keystone
 2017-02-10 09:44:47,640 armada       INFO     Building dependency chart common for release keystone
 2017-02-10 09:44:47,640 armada       INFO     Cloning git://github.com/att-comdev/openstack-helm/common for release None
