@@ -27,6 +27,10 @@ To use this container, use these simple instructions:
 docker run quay.io/attcomdev/armada:latest
 ```
 
+## Development
+
+For development please refer to [Getting Started](./docs/development/getting-started.rst) guide
+
 ## Installation
 
 The installation is fairly straight forward:
