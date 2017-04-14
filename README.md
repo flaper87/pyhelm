@@ -66,7 +66,7 @@ Before using armada we need to check a few things:
 To run armada, simply supply it with your YAML based intention for any number of charts:
 
 ```
-aramda -c examples/armada.yaml
+armada -c examples/armada.yaml
 ```
 
 Your output will look something like this:
