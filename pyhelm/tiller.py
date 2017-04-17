@@ -1,8 +1,10 @@
 from hapi.services.tiller_pb2 import ReleaseServiceStub, ListReleasesRequest, \
-    InstallReleaseRequest, UpdateReleaseRequest
+    InstallReleaseRequest, UpdateReleaseRequest, UninstallReleaseRequest
 from hapi.chart.config_pb2 import Config
-from k8s import K8s
 import grpc
+
+from logutil import LOG
+from k8s import K8s
 
 TILLER_PORT = 44134
 TILLER_VERSION = b'2.1.3'
@@ -110,7 +112,8 @@ class Tiller(object):
         return stub.UpdateRelease(release_request, self.timeout,
                                   metadata=self.metadata)
 
-    def install_release(self, chart, dry_run, name, namespace, values=None):
+    def install_release(self, chart, dry_run, name, namespace, prefix,
+                        values=None):
         '''
         Create a Helm Release
         '''
@@ -126,8 +129,44 @@ class Tiller(object):
             chart=chart,
             dry_run=dry_run,
             values=values,
-            name=name,
+            name="{}-{}".format(prefix, name),
             namespace=namespace)
         return stub.InstallRelease(release_request,
                                    self.timeout,
                                    metadata=self.metadata)
+
+    def uninstall_release(self, release, disable_hooks=False, purge=True):
+        '''
+        :params - release - helm chart release name
+        :params - purge - deep delete of chart
+
+        deletes a helm chart from tiller
+        '''
+
+        # build release install request
+        stub = ReleaseServiceStub(self.channel)
+        release_request = UninstallReleaseRequest(name=release,
+                                                  disable_hooks=disable_hooks,
+                                                  purge=purge)
+        return stub.UninstallRelease(release_request,
+                                     self.timeout,
+                                     metadata=self.metadata)
+
+    def chart_cleanup(self, prefix, charts, known_releases):
+        '''
+        :params charts - list of yaml charts
+        :params known_release - list of releases in tiller
+
+        :result - will remove any chart that is not present in yaml
+        '''
+        def release_prefix(prefix, chart):
+            return "{}-{}".format(prefix, chart["chart"]["release_name"])
+
+        valid_charts = [release_prefix(prefix, chart) for chart in charts]
+        actual_charts = [x.name for x in self.list_releases()]
+        chart_diff = list(set(actual_charts) - set(valid_charts))
+
+        for chart in chart_diff:
+            if chart.startswith(prefix):
+                LOG.debug("Release: %s will be removed", chart)
+                self.uninstall_release(chart)
