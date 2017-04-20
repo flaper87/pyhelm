@@ -134,7 +134,7 @@ class Tiller(object):
         except Exception:
             LOG.debug("POST: Could not create anything, please check yaml")
 
-    def update_release(self, chart, dry_run, name, namespace,
+    def update_release(self, chart, dry_run, name, namespace, prefix,
                        pre_actions=None, post_actions=None,
                        disable_hooks=False, values=None):
         '''
@@ -155,7 +155,7 @@ class Tiller(object):
             dry_run=dry_run,
             disable_hooks=disable_hooks,
             values=values,
-            name=name)
+            name="{}-{}".format(prefix, name))
 
         stub.UpdateRelease(release_request, self.timeout,
                            metadata=self.metadata)
