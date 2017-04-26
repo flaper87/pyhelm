@@ -3,8 +3,8 @@ from hapi.services.tiller_pb2 import ReleaseServiceStub, ListReleasesRequest, \
     InstallReleaseRequest, UpdateReleaseRequest, UninstallReleaseRequest
 from hapi.chart.config_pb2 import Config
 
-from armada.handlers.k8s import K8s
-from armada.logutil import LOG
+from k8s import K8s
+from logutil import LOG
 
 TILLER_PORT = 44134
 TILLER_VERSION = b'2.1.3'
@@ -64,6 +64,15 @@ class Tiller(object):
     def _get_tiller_port(self):
         '''Stub method to support arbitrary ports in the future'''
         return TILLER_PORT
+
+    def tiller_status(self):
+        '''
+        return if tiller exist or not
+        '''
+        if self._get_tiller_ip:
+            return True
+
+        return False
 
     def list_releases(self):
         '''

@@ -24,7 +24,12 @@ Its functionality may extend beyond helm, assisting in interacting with kubernet
 To use this container, use these simple instructions:
 
 ```
-docker run quay.io/attcomdev/armada:latest
+docker build -t armada .
+```
+
+
+```
+docker run -v ~/.kube/config:/root/.kube/config -v $(pwd)/examples/:/examples -v /tmp:/dev/log quay.io/attcomdev/armada:latest
 ```
 
 ## Development
