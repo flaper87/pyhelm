@@ -1,8 +1,11 @@
-# PyHelm
+======
+PyHelm
+======
 
 Python bindings for the Helm package manager
 
-# Helm gRPC
+Helm gRPC
+---------
 
 The helm gRPC libraries are located in the hapi directory.  They were generated with the grpc_tools.protoc utility against Helm 2.1.3.  Should you wish to re-generate them you can easily do so:
 
