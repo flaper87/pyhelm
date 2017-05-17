@@ -1,15 +1,15 @@
 import grpc
-from hapi.services.tiller_pb2 import ReleaseServiceStub, ListReleasesRequest, \
+from pyhelm.hapi.services.tiller_pb2 import ReleaseServiceStub, ListReleasesRequest, \
     InstallReleaseRequest, UpdateReleaseRequest, UninstallReleaseRequest
-from hapi.chart.config_pb2 import Config
+from pyhelm.hapi.chart.chart_pb2 import Chart
+from pyhelm.hapi.chart.config_pb2 import Config
 
-from k8s import K8s
-from logutil import LOG
 
 TILLER_PORT = 44134
-TILLER_VERSION = b'2.1.3'
+TILLER_VERSION = b'2.4.1'
 TILLER_TIMEOUT = 300
 RELEASE_LIMIT = 64
+
 
 class Tiller(object):
     '''
@@ -17,10 +17,11 @@ class Tiller(object):
     service over gRPC
     '''
 
-    def __init__(self):
+    def __init__(self, host, port=44134):
 
         # init k8s connectivity
-        self.k8s = K8s()
+        self._host = host
+        self._port = port
 
         # init tiller channel
         self.channel = self.get_channel()
@@ -41,35 +42,13 @@ class Tiller(object):
         '''
         Return a tiller channel
         '''
-        tiller_ip = self._get_tiller_ip()
-        tiller_port = self._get_tiller_port()
-        return grpc.insecure_channel('%s:%s' % (tiller_ip, tiller_port))
-
-    def _get_tiller_pod(self):
-        '''
-        Search all namespaces for a pod beginning with tiller-deploy*
-        '''
-        for i in self.k8s.get_namespace_pod('kube-system').items:
-            # TODO(alanmeadows): this is a bit loose
-            if i.metadata.name.startswith('tiller-deploy'):
-                return i
-
-    def _get_tiller_ip(self):
-        '''
-        Returns the tiller pod's IP address by searching all namespaces
-        '''
-        pod = self._get_tiller_pod()
-        return pod.status.pod_ip
-
-    def _get_tiller_port(self):
-        '''Stub method to support arbitrary ports in the future'''
-        return TILLER_PORT
+        return grpc.insecure_channel('%s:%s' % (self._host, self._port))
 
     def tiller_status(self):
         '''
         return if tiller exist or not
         '''
-        if self._get_tiller_ip:
+        if self._host:
             return True
 
         return False
