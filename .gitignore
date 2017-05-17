@@ -1,0 +1,22 @@
+.coverage
+subunit.log
+.venv
+*,cover
+cover
+*.pyc
+.idea
+*.sw?
+*~
+AUTHORS
+build
+dist
+ChangeLog
+run_tests.err.log
+.testrepository
+.tox
+doc/source/api
+doc/build
+*.egg
+.eggs/*
+# Files created by releasenotes build
+releasenotes/build
