@@ -1,4 +1,6 @@
 import grpc
+import yaml
+
 from pyhelm.hapi.services.tiller_pb2 import ReleaseServiceStub, ListReleasesRequest, \
     InstallReleaseRequest, UpdateReleaseRequest, UninstallReleaseRequest
 from pyhelm.hapi.chart.chart_pb2 import Chart
@@ -122,18 +124,14 @@ class Tiller(object):
         except Exception:
             LOG.debug("POST: Could not create anything, please check yaml")
 
-    def update_release(self, chart, dry_run, name, namespace, prefix,
+    def update_release(self, chart, dry_run, namespace, name=None,
                        pre_actions=None, post_actions=None,
                        disable_hooks=False, values=None):
         '''
         Update a Helm Release
         '''
 
-        if values is None:
-            values = Config(raw='')
-        else:
-            values = Config(raw=values)
-
+        values = Config(raw=yaml.safe_dump(values or {}))
         self._pre_update_actions(pre_actions, namespace)
 
         # build release install request
@@ -143,23 +141,20 @@ class Tiller(object):
             dry_run=dry_run,
             disable_hooks=disable_hooks,
             values=values,
-            name="{}-{}".format(prefix, name))
+            name=name or '')
 
         stub.UpdateRelease(release_request, self.timeout,
                            metadata=self.metadata)
 
         self._post_update_actions(post_actions, namespace)
 
-    def install_release(self, chart, dry_run, name, namespace, prefix,
-                        values=None):
+    def install_release(self, chart, namespace, dry_run=False,
+                        name=None, values=None):
         """
         Create a Helm Release
         """
 
-        if values is None:
-            values = Config(raw='')
-        else:
-            values = Config(raw=values)
+        values = Config(raw=yaml.safe_dump(values or {}))
 
         # build release install request
         stub = ReleaseServiceStub(self.channel)
@@ -167,7 +162,7 @@ class Tiller(object):
             chart=chart,
             dry_run=dry_run,
             values=values,
-            name="{}-{}".format(prefix, name),
+            name=name or '',
             namespace=namespace)
         return stub.InstallRelease(release_request,
                                    self.timeout,

@@ -69,7 +69,7 @@ class ChartBuilder(object):
         else:
             LOG.info("Cloning %s/%s for release %s",
                      self.chart.source.location,
-                     subpath, self.chart.release_name)
+                     subpath, self.chart.name)
 
         if self.chart.source.type == 'git':
             self._source_tmp_dir = repo.git_clone(self.chart.source.location,
@@ -166,7 +166,7 @@ class ChartBuilder(object):
 
         for chart in self.chart.get('dependencies', []):
             LOG.info("Building dependency chart %s for release %s", chart.name,
-                     self.chart.release_name)
+                     self.chart.name)
             dependencies.append(ChartBuilder(chart).get_helm_chart())
 
         helm_chart = Chart(
