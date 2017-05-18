@@ -152,9 +152,9 @@ class Tiller(object):
 
     def install_release(self, chart, dry_run, name, namespace, prefix,
                         values=None):
-        '''
+        """
         Create a Helm Release
-        '''
+        """
 
         if values is None:
             values = Config(raw='')
@@ -174,12 +174,12 @@ class Tiller(object):
                                    metadata=self.metadata)
 
     def uninstall_release(self, release, disable_hooks=False, purge=True):
-        '''
+        """
         :params - release - helm chart release name
         :params - purge - deep delete of chart
 
         deletes a helm chart from tiller
-        '''
+        """
 
         # build release install request
         stub = ReleaseServiceStub(self.channel)
@@ -191,16 +191,16 @@ class Tiller(object):
                                      metadata=self.metadata)
 
     def chart_cleanup(self, prefix, charts):
-        '''
+        """
         :params charts - list of yaml charts
         :params known_release - list of releases in tiller
 
         :result - will remove any chart that is not present in yaml
-        '''
+        """
         def release_prefix(prefix, chart):
-            '''
+            """
             how to attach prefix to chart
-            '''
+            """
             return "{}-{}".format(prefix, chart["chart"]["release_name"])
 
         valid_charts = [release_prefix(prefix, chart) for chart in charts]
