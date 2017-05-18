@@ -1,10 +1,10 @@
 import grpc
 import yaml
 
-from pyhelm.hapi.services.tiller_pb2 import ReleaseServiceStub, ListReleasesRequest, \
+from hapi.services.tiller_pb2 import ReleaseServiceStub, ListReleasesRequest, \
     InstallReleaseRequest, UpdateReleaseRequest, UninstallReleaseRequest
-from pyhelm.hapi.chart.chart_pb2 import Chart
-from pyhelm.hapi.chart.config_pb2 import Config
+from hapi.chart.chart_pb2 import Chart
+from hapi.chart.config_pb2 import Config
 
 
 TILLER_PORT = 44134
