@@ -8,7 +8,7 @@ from hapi.chart.config_pb2 import Config
 
 
 TILLER_PORT = 44134
-TILLER_VERSION = b'2.4.1'
+TILLER_VERSION = b'2.3.1'
 TILLER_TIMEOUT = 300
 RELEASE_LIMIT = 64
 

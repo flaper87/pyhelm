@@ -13,6 +13,7 @@ from google.protobuf import descriptor_pb2
 _sym_db = _symbol_database.Default()
 
 
+from hapi.release import test_suite_pb2 as hapi_dot_release_dot_test__suite__pb2
 from google.protobuf import any_pb2 as google_dot_protobuf_dot_any__pb2
 
 
@@ -20,9 +21,9 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='hapi/release/status.proto',
   package='hapi.release',
   syntax='proto3',
-  serialized_pb=_b('\n\x19hapi/release/status.proto\x12\x0chapi.release\x1a\x19google/protobuf/any.proto\"\xd4\x01\n\x06Status\x12\'\n\x04\x63ode\x18\x01 \x01(\x0e\x32\x19.hapi.release.Status.Code\x12%\n\x07\x64\x65tails\x18\x02 \x01(\x0b\x32\x14.google.protobuf.Any\x12\x11\n\tresources\x18\x03 \x01(\t\x12\r\n\x05notes\x18\x04 \x01(\t\"X\n\x04\x43ode\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x0c\n\x08\x44\x45PLOYED\x10\x01\x12\x0b\n\x07\x44\x45LETED\x10\x02\x12\x0e\n\nSUPERSEDED\x10\x03\x12\n\n\x06\x46\x41ILED\x10\x04\x12\x0c\n\x08\x44\x45LETING\x10\x05\x42\tZ\x07releaseb\x06proto3')
+  serialized_pb=_b('\n\x19hapi/release/status.proto\x12\x0chapi.release\x1a\x1dhapi/release/test_suite.proto\x1a\x19google/protobuf/any.proto\"\xe3\x01\n\x06Status\x12\'\n\x04\x63ode\x18\x01 \x01(\x0e\x32\x19.hapi.release.Status.Code\x12\x11\n\tresources\x18\x03 \x01(\t\x12\r\n\x05notes\x18\x04 \x01(\t\x12\x34\n\x13last_test_suite_run\x18\x05 \x01(\x0b\x32\x17.hapi.release.TestSuite\"X\n\x04\x43ode\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x0c\n\x08\x44\x45PLOYED\x10\x01\x12\x0b\n\x07\x44\x45LETED\x10\x02\x12\x0e\n\nSUPERSEDED\x10\x03\x12\n\n\x06\x46\x41ILED\x10\x04\x12\x0c\n\x08\x44\x45LETING\x10\x05\x42\tZ\x07releaseb\x06proto3')
   ,
-  dependencies=[google_dot_protobuf_dot_any__pb2.DESCRIPTOR,])
+  dependencies=[hapi_dot_release_dot_test__suite__pb2.DESCRIPTOR,google_dot_protobuf_dot_any__pb2.DESCRIPTOR,])
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 
@@ -60,8 +61,8 @@ _STATUS_CODE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=195,
-  serialized_end=283,
+  serialized_start=241,
+  serialized_end=329,
 )
 _sym_db.RegisterEnumDescriptor(_STATUS_CODE)
 
@@ -81,23 +82,23 @@ _STATUS = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='details', full_name='hapi.release.Status.details', index=1,
-      number=2, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='resources', full_name='hapi.release.Status.resources', index=2,
+      name='resources', full_name='hapi.release.Status.resources', index=1,
       number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='notes', full_name='hapi.release.Status.notes', index=3,
+      name='notes', full_name='hapi.release.Status.notes', index=2,
       number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='last_test_suite_run', full_name='hapi.release.Status.last_test_suite_run', index=3,
+      number=5, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -114,12 +115,12 @@ _STATUS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=71,
-  serialized_end=283,
+  serialized_start=102,
+  serialized_end=329,
 )
 
 _STATUS.fields_by_name['code'].enum_type = _STATUS_CODE
-_STATUS.fields_by_name['details'].message_type = google_dot_protobuf_dot_any__pb2._ANY
+_STATUS.fields_by_name['last_test_suite_run'].message_type = hapi_dot_release_dot_test__suite__pb2._TESTSUITE
 _STATUS_CODE.containing_type = _STATUS
 DESCRIPTOR.message_types_by_name['Status'] = _STATUS
 

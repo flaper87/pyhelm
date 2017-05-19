@@ -21,7 +21,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='hapi/release/info.proto',
   package='hapi.release',
   syntax='proto3',
-  serialized_pb=_b('\n\x17hapi/release/info.proto\x12\x0chapi.release\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x19hapi/release/status.proto\"\xc0\x01\n\x04Info\x12$\n\x06status\x18\x01 \x01(\x0b\x32\x14.hapi.release.Status\x12\x32\n\x0e\x66irst_deployed\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x31\n\rlast_deployed\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12+\n\x07\x64\x65leted\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.TimestampB\tZ\x07releaseb\x06proto3')
+  serialized_pb=_b('\n\x17hapi/release/info.proto\x12\x0chapi.release\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x19hapi/release/status.proto\"\xd5\x01\n\x04Info\x12$\n\x06status\x18\x01 \x01(\x0b\x32\x14.hapi.release.Status\x12\x32\n\x0e\x66irst_deployed\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x31\n\rlast_deployed\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12+\n\x07\x64\x65leted\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x13\n\x0b\x44\x65scription\x18\x05 \x01(\tB\tZ\x07releaseb\x06proto3')
   ,
   dependencies=[google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,hapi_dot_release_dot_status__pb2.DESCRIPTOR,])
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
@@ -64,6 +64,13 @@ _INFO = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='Description', full_name='hapi.release.Info.Description', index=4,
+      number=5, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -77,7 +84,7 @@ _INFO = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=102,
-  serialized_end=294,
+  serialized_end=315,
 )
 
 _INFO.fields_by_name['status'].message_type = hapi_dot_release_dot_status__pb2._STATUS

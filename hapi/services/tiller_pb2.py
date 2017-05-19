@@ -25,7 +25,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='hapi/services/tiller.proto',
   package='hapi.services.tiller',
   syntax='proto3',
-  serialized_pb=_b('\n\x1ahapi/services/tiller.proto\x12\x14hapi.services.tiller\x1a\x16hapi/chart/chart.proto\x1a\x17hapi/chart/config.proto\x1a\x1ahapi/release/release.proto\x1a\x17hapi/release/info.proto\x1a\x19hapi/release/status.proto\x1a\x1ahapi/version/version.proto\"\xeb\x01\n\x13ListReleasesRequest\x12\r\n\x05limit\x18\x01 \x01(\x03\x12\x0e\n\x06offset\x18\x02 \x01(\t\x12\x36\n\x07sort_by\x18\x03 \x01(\x0e\x32%.hapi.services.tiller.ListSort.SortBy\x12\x0e\n\x06\x66ilter\x18\x04 \x01(\t\x12<\n\nsort_order\x18\x05 \x01(\x0e\x32(.hapi.services.tiller.ListSort.SortOrder\x12/\n\x0cstatus_codes\x18\x06 \x03(\x0e\x32\x19.hapi.release.Status.Code\"^\n\x08ListSort\"2\n\x06SortBy\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x08\n\x04NAME\x10\x01\x12\x11\n\rLAST_RELEASED\x10\x02\"\x1e\n\tSortOrder\x12\x07\n\x03\x41SC\x10\x00\x12\x08\n\x04\x44\x45SC\x10\x01\"k\n\x14ListReleasesResponse\x12\r\n\x05\x63ount\x18\x01 \x01(\x03\x12\x0c\n\x04next\x18\x02 \x01(\t\x12\r\n\x05total\x18\x03 \x01(\x03\x12\'\n\x08releases\x18\x04 \x03(\x0b\x32\x15.hapi.release.Release\"8\n\x17GetReleaseStatusRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\x05\"]\n\x18GetReleaseStatusResponse\x12\x0c\n\x04name\x18\x01 \x01(\t\x12 \n\x04info\x18\x02 \x01(\x0b\x32\x12.hapi.release.Info\x12\x11\n\tnamespace\x18\x03 \x01(\t\"9\n\x18GetReleaseContentRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\x05\"C\n\x19GetReleaseContentResponse\x12&\n\x07release\x18\x01 \x01(\x0b\x32\x15.hapi.release.Release\"\x92\x01\n\x14UpdateReleaseRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12 \n\x05\x63hart\x18\x02 \x01(\x0b\x32\x11.hapi.chart.Chart\x12\"\n\x06values\x18\x03 \x01(\x0b\x32\x12.hapi.chart.Config\x12\x0f\n\x07\x64ry_run\x18\x04 \x01(\x08\x12\x15\n\rdisable_hooks\x18\x05 \x01(\x08\"?\n\x15UpdateReleaseResponse\x12&\n\x07release\x18\x01 \x01(\x0b\x32\x15.hapi.release.Release\"_\n\x16RollbackReleaseRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0f\n\x07\x64ry_run\x18\x02 \x01(\x08\x12\x15\n\rdisable_hooks\x18\x03 \x01(\x08\x12\x0f\n\x07version\x18\x04 \x01(\x05\"A\n\x17RollbackReleaseResponse\x12&\n\x07release\x18\x01 \x01(\x0b\x32\x15.hapi.release.Release\"\xba\x01\n\x15InstallReleaseRequest\x12 \n\x05\x63hart\x18\x01 \x01(\x0b\x32\x11.hapi.chart.Chart\x12\"\n\x06values\x18\x02 \x01(\x0b\x32\x12.hapi.chart.Config\x12\x0f\n\x07\x64ry_run\x18\x03 \x01(\x08\x12\x0c\n\x04name\x18\x04 \x01(\t\x12\x15\n\rdisable_hooks\x18\x05 \x01(\x08\x12\x11\n\tnamespace\x18\x06 \x01(\t\x12\x12\n\nreuse_name\x18\x07 \x01(\x08\"@\n\x16InstallReleaseResponse\x12&\n\x07release\x18\x01 \x01(\x0b\x32\x15.hapi.release.Release\"M\n\x17UninstallReleaseRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x15\n\rdisable_hooks\x18\x02 \x01(\x08\x12\r\n\x05purge\x18\x03 \x01(\x08\"P\n\x18UninstallReleaseResponse\x12&\n\x07release\x18\x01 \x01(\x0b\x32\x15.hapi.release.Release\x12\x0c\n\x04info\x18\x02 \x01(\t\"\x13\n\x11GetVersionRequest\"<\n\x12GetVersionResponse\x12&\n\x07Version\x18\x01 \x01(\x0b\x32\x15.hapi.version.Version\".\n\x11GetHistoryRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0b\n\x03max\x18\x02 \x01(\x05\"=\n\x12GetHistoryResponse\x12\'\n\x08releases\x18\x01 \x03(\x0b\x32\x15.hapi.release.Release2\xf0\x07\n\x0eReleaseService\x12i\n\x0cListReleases\x12).hapi.services.tiller.ListReleasesRequest\x1a*.hapi.services.tiller.ListReleasesResponse\"\x00\x30\x01\x12s\n\x10GetReleaseStatus\x12-.hapi.services.tiller.GetReleaseStatusRequest\x1a..hapi.services.tiller.GetReleaseStatusResponse\"\x00\x12v\n\x11GetReleaseContent\x12..hapi.services.tiller.GetReleaseContentRequest\x1a/.hapi.services.tiller.GetReleaseContentResponse\"\x00\x12j\n\rUpdateRelease\x12*.hapi.services.tiller.UpdateReleaseRequest\x1a+.hapi.services.tiller.UpdateReleaseResponse\"\x00\x12m\n\x0eInstallRelease\x12+.hapi.services.tiller.InstallReleaseRequest\x1a,.hapi.services.tiller.InstallReleaseResponse\"\x00\x12s\n\x10UninstallRelease\x12-.hapi.services.tiller.UninstallReleaseRequest\x1a..hapi.services.tiller.UninstallReleaseResponse\"\x00\x12\x61\n\nGetVersion\x12\'.hapi.services.tiller.GetVersionRequest\x1a(.hapi.services.tiller.GetVersionResponse\"\x00\x12p\n\x0fRollbackRelease\x12,.hapi.services.tiller.RollbackReleaseRequest\x1a-.hapi.services.tiller.RollbackReleaseResponse\"\x00\x12\x61\n\nGetHistory\x12\'.hapi.services.tiller.GetHistoryRequest\x1a(.hapi.services.tiller.GetHistoryResponse\"\x00\x42\nZ\x08servicesb\x06proto3')
+  serialized_pb=_b('\n\x1ahapi/services/tiller.proto\x12\x14hapi.services.tiller\x1a\x16hapi/chart/chart.proto\x1a\x17hapi/chart/config.proto\x1a\x1ahapi/release/release.proto\x1a\x17hapi/release/info.proto\x1a\x19hapi/release/status.proto\x1a\x1ahapi/version/version.proto\"\xfe\x01\n\x13ListReleasesRequest\x12\r\n\x05limit\x18\x01 \x01(\x03\x12\x0e\n\x06offset\x18\x02 \x01(\t\x12\x36\n\x07sort_by\x18\x03 \x01(\x0e\x32%.hapi.services.tiller.ListSort.SortBy\x12\x0e\n\x06\x66ilter\x18\x04 \x01(\t\x12<\n\nsort_order\x18\x05 \x01(\x0e\x32(.hapi.services.tiller.ListSort.SortOrder\x12/\n\x0cstatus_codes\x18\x06 \x03(\x0e\x32\x19.hapi.release.Status.Code\x12\x11\n\tnamespace\x18\x07 \x01(\t\"^\n\x08ListSort\"2\n\x06SortBy\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x08\n\x04NAME\x10\x01\x12\x11\n\rLAST_RELEASED\x10\x02\"\x1e\n\tSortOrder\x12\x07\n\x03\x41SC\x10\x00\x12\x08\n\x04\x44\x45SC\x10\x01\"k\n\x14ListReleasesResponse\x12\r\n\x05\x63ount\x18\x01 \x01(\x03\x12\x0c\n\x04next\x18\x02 \x01(\t\x12\r\n\x05total\x18\x03 \x01(\x03\x12\'\n\x08releases\x18\x04 \x03(\x0b\x32\x15.hapi.release.Release\"8\n\x17GetReleaseStatusRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\x05\"]\n\x18GetReleaseStatusResponse\x12\x0c\n\x04name\x18\x01 \x01(\t\x12 \n\x04info\x18\x02 \x01(\x0b\x32\x12.hapi.release.Info\x12\x11\n\tnamespace\x18\x03 \x01(\t\"9\n\x18GetReleaseContentRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0f\n\x07version\x18\x02 \x01(\x05\"C\n\x19GetReleaseContentResponse\x12&\n\x07release\x18\x01 \x01(\x0b\x32\x15.hapi.release.Release\"\xef\x01\n\x14UpdateReleaseRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12 \n\x05\x63hart\x18\x02 \x01(\x0b\x32\x11.hapi.chart.Chart\x12\"\n\x06values\x18\x03 \x01(\x0b\x32\x12.hapi.chart.Config\x12\x0f\n\x07\x64ry_run\x18\x04 \x01(\x08\x12\x15\n\rdisable_hooks\x18\x05 \x01(\x08\x12\x10\n\x08recreate\x18\x06 \x01(\x08\x12\x0f\n\x07timeout\x18\x07 \x01(\x03\x12\x14\n\x0creset_values\x18\x08 \x01(\x08\x12\x0c\n\x04wait\x18\t \x01(\x08\x12\x14\n\x0creuse_values\x18\n \x01(\x08\"?\n\x15UpdateReleaseResponse\x12&\n\x07release\x18\x01 \x01(\x0b\x32\x15.hapi.release.Release\"\x90\x01\n\x16RollbackReleaseRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0f\n\x07\x64ry_run\x18\x02 \x01(\x08\x12\x15\n\rdisable_hooks\x18\x03 \x01(\x08\x12\x0f\n\x07version\x18\x04 \x01(\x05\x12\x10\n\x08recreate\x18\x05 \x01(\x08\x12\x0f\n\x07timeout\x18\x06 \x01(\x03\x12\x0c\n\x04wait\x18\x07 \x01(\x08\"A\n\x17RollbackReleaseResponse\x12&\n\x07release\x18\x01 \x01(\x0b\x32\x15.hapi.release.Release\"\xd9\x01\n\x15InstallReleaseRequest\x12 \n\x05\x63hart\x18\x01 \x01(\x0b\x32\x11.hapi.chart.Chart\x12\"\n\x06values\x18\x02 \x01(\x0b\x32\x12.hapi.chart.Config\x12\x0f\n\x07\x64ry_run\x18\x03 \x01(\x08\x12\x0c\n\x04name\x18\x04 \x01(\t\x12\x15\n\rdisable_hooks\x18\x05 \x01(\x08\x12\x11\n\tnamespace\x18\x06 \x01(\t\x12\x12\n\nreuse_name\x18\x07 \x01(\x08\x12\x0f\n\x07timeout\x18\x08 \x01(\x03\x12\x0c\n\x04wait\x18\t \x01(\x08\"@\n\x16InstallReleaseResponse\x12&\n\x07release\x18\x01 \x01(\x0b\x32\x15.hapi.release.Release\"^\n\x17UninstallReleaseRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x15\n\rdisable_hooks\x18\x02 \x01(\x08\x12\r\n\x05purge\x18\x03 \x01(\x08\x12\x0f\n\x07timeout\x18\x04 \x01(\x03\"P\n\x18UninstallReleaseResponse\x12&\n\x07release\x18\x01 \x01(\x0b\x32\x15.hapi.release.Release\x12\x0c\n\x04info\x18\x02 \x01(\t\"\x13\n\x11GetVersionRequest\"<\n\x12GetVersionResponse\x12&\n\x07Version\x18\x01 \x01(\x0b\x32\x15.hapi.version.Version\".\n\x11GetHistoryRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0b\n\x03max\x18\x02 \x01(\x05\"=\n\x12GetHistoryResponse\x12\'\n\x08releases\x18\x01 \x03(\x0b\x32\x15.hapi.release.Release\"D\n\x12TestReleaseRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0f\n\x07timeout\x18\x02 \x01(\x03\x12\x0f\n\x07\x63leanup\x18\x03 \x01(\x08\"\"\n\x13TestReleaseResponse\x12\x0b\n\x03msg\x18\x01 \x01(\t2\xdb\x08\n\x0eReleaseService\x12i\n\x0cListReleases\x12).hapi.services.tiller.ListReleasesRequest\x1a*.hapi.services.tiller.ListReleasesResponse\"\x00\x30\x01\x12s\n\x10GetReleaseStatus\x12-.hapi.services.tiller.GetReleaseStatusRequest\x1a..hapi.services.tiller.GetReleaseStatusResponse\"\x00\x12v\n\x11GetReleaseContent\x12..hapi.services.tiller.GetReleaseContentRequest\x1a/.hapi.services.tiller.GetReleaseContentResponse\"\x00\x12j\n\rUpdateRelease\x12*.hapi.services.tiller.UpdateReleaseRequest\x1a+.hapi.services.tiller.UpdateReleaseResponse\"\x00\x12m\n\x0eInstallRelease\x12+.hapi.services.tiller.InstallReleaseRequest\x1a,.hapi.services.tiller.InstallReleaseResponse\"\x00\x12s\n\x10UninstallRelease\x12-.hapi.services.tiller.UninstallReleaseRequest\x1a..hapi.services.tiller.UninstallReleaseResponse\"\x00\x12\x61\n\nGetVersion\x12\'.hapi.services.tiller.GetVersionRequest\x1a(.hapi.services.tiller.GetVersionResponse\"\x00\x12p\n\x0fRollbackRelease\x12,.hapi.services.tiller.RollbackReleaseRequest\x1a-.hapi.services.tiller.RollbackReleaseResponse\"\x00\x12\x61\n\nGetHistory\x12\'.hapi.services.tiller.GetHistoryRequest\x1a(.hapi.services.tiller.GetHistoryResponse\"\x00\x12i\n\x0eRunReleaseTest\x12(.hapi.services.tiller.TestReleaseRequest\x1a).hapi.services.tiller.TestReleaseResponse\"\x00\x30\x01\x42\nZ\x08servicesb\x06proto3')
   ,
   dependencies=[hapi_dot_chart_dot_chart__pb2.DESCRIPTOR,hapi_dot_chart_dot_config__pb2.DESCRIPTOR,hapi_dot_release_dot_release__pb2.DESCRIPTOR,hapi_dot_release_dot_info__pb2.DESCRIPTOR,hapi_dot_release_dot_status__pb2.DESCRIPTOR,hapi_dot_version_dot_version__pb2.DESCRIPTOR,])
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
@@ -53,8 +53,8 @@ _LISTSORT_SORTBY = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=459,
-  serialized_end=509,
+  serialized_start=478,
+  serialized_end=528,
 )
 _sym_db.RegisterEnumDescriptor(_LISTSORT_SORTBY)
 
@@ -75,8 +75,8 @@ _LISTSORT_SORTORDER = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=511,
-  serialized_end=541,
+  serialized_start=530,
+  serialized_end=560,
 )
 _sym_db.RegisterEnumDescriptor(_LISTSORT_SORTORDER)
 
@@ -130,6 +130,13 @@ _LISTRELEASESREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='namespace', full_name='hapi.services.tiller.ListReleasesRequest.namespace', index=6,
+      number=7, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -143,7 +150,7 @@ _LISTRELEASESREQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=210,
-  serialized_end=445,
+  serialized_end=464,
 )
 
 
@@ -168,8 +175,8 @@ _LISTSORT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=447,
-  serialized_end=541,
+  serialized_start=466,
+  serialized_end=560,
 )
 
 
@@ -220,8 +227,8 @@ _LISTRELEASESRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=543,
-  serialized_end=650,
+  serialized_start=562,
+  serialized_end=669,
 )
 
 
@@ -258,8 +265,8 @@ _GETRELEASESTATUSREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=652,
-  serialized_end=708,
+  serialized_start=671,
+  serialized_end=727,
 )
 
 
@@ -303,8 +310,8 @@ _GETRELEASESTATUSRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=710,
-  serialized_end=803,
+  serialized_start=729,
+  serialized_end=822,
 )
 
 
@@ -341,8 +348,8 @@ _GETRELEASECONTENTREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=805,
-  serialized_end=862,
+  serialized_start=824,
+  serialized_end=881,
 )
 
 
@@ -372,8 +379,8 @@ _GETRELEASECONTENTRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=864,
-  serialized_end=931,
+  serialized_start=883,
+  serialized_end=950,
 )
 
 
@@ -419,6 +426,41 @@ _UPDATERELEASEREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='recreate', full_name='hapi.services.tiller.UpdateReleaseRequest.recreate', index=5,
+      number=6, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='timeout', full_name='hapi.services.tiller.UpdateReleaseRequest.timeout', index=6,
+      number=7, type=3, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='reset_values', full_name='hapi.services.tiller.UpdateReleaseRequest.reset_values', index=7,
+      number=8, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='wait', full_name='hapi.services.tiller.UpdateReleaseRequest.wait', index=8,
+      number=9, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='reuse_values', full_name='hapi.services.tiller.UpdateReleaseRequest.reuse_values', index=9,
+      number=10, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -431,8 +473,8 @@ _UPDATERELEASEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=934,
-  serialized_end=1080,
+  serialized_start=953,
+  serialized_end=1192,
 )
 
 
@@ -462,8 +504,8 @@ _UPDATERELEASERESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1082,
-  serialized_end=1145,
+  serialized_start=1194,
+  serialized_end=1257,
 )
 
 
@@ -502,6 +544,27 @@ _ROLLBACKRELEASEREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='recreate', full_name='hapi.services.tiller.RollbackReleaseRequest.recreate', index=4,
+      number=5, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='timeout', full_name='hapi.services.tiller.RollbackReleaseRequest.timeout', index=5,
+      number=6, type=3, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='wait', full_name='hapi.services.tiller.RollbackReleaseRequest.wait', index=6,
+      number=7, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -514,8 +577,8 @@ _ROLLBACKRELEASEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1147,
-  serialized_end=1242,
+  serialized_start=1260,
+  serialized_end=1404,
 )
 
 
@@ -545,8 +608,8 @@ _ROLLBACKRELEASERESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1244,
-  serialized_end=1309,
+  serialized_start=1406,
+  serialized_end=1471,
 )
 
 
@@ -606,6 +669,20 @@ _INSTALLRELEASEREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='timeout', full_name='hapi.services.tiller.InstallReleaseRequest.timeout', index=7,
+      number=8, type=3, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='wait', full_name='hapi.services.tiller.InstallReleaseRequest.wait', index=8,
+      number=9, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -618,8 +695,8 @@ _INSTALLRELEASEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1312,
-  serialized_end=1498,
+  serialized_start=1474,
+  serialized_end=1691,
 )
 
 
@@ -649,8 +726,8 @@ _INSTALLRELEASERESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1500,
-  serialized_end=1564,
+  serialized_start=1693,
+  serialized_end=1757,
 )
 
 
@@ -682,6 +759,13 @@ _UNINSTALLRELEASEREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='timeout', full_name='hapi.services.tiller.UninstallReleaseRequest.timeout', index=3,
+      number=4, type=3, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -694,8 +778,8 @@ _UNINSTALLRELEASEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1566,
-  serialized_end=1643,
+  serialized_start=1759,
+  serialized_end=1853,
 )
 
 
@@ -732,8 +816,8 @@ _UNINSTALLRELEASERESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1645,
-  serialized_end=1725,
+  serialized_start=1855,
+  serialized_end=1935,
 )
 
 
@@ -756,8 +840,8 @@ _GETVERSIONREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1727,
-  serialized_end=1746,
+  serialized_start=1937,
+  serialized_end=1956,
 )
 
 
@@ -787,8 +871,8 @@ _GETVERSIONRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1748,
-  serialized_end=1808,
+  serialized_start=1958,
+  serialized_end=2018,
 )
 
 
@@ -825,8 +909,8 @@ _GETHISTORYREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1810,
-  serialized_end=1856,
+  serialized_start=2020,
+  serialized_end=2066,
 )
 
 
@@ -856,8 +940,84 @@ _GETHISTORYRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1858,
-  serialized_end=1919,
+  serialized_start=2068,
+  serialized_end=2129,
+)
+
+
+_TESTRELEASEREQUEST = _descriptor.Descriptor(
+  name='TestReleaseRequest',
+  full_name='hapi.services.tiller.TestReleaseRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='name', full_name='hapi.services.tiller.TestReleaseRequest.name', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='timeout', full_name='hapi.services.tiller.TestReleaseRequest.timeout', index=1,
+      number=2, type=3, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='cleanup', full_name='hapi.services.tiller.TestReleaseRequest.cleanup', index=2,
+      number=3, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=2131,
+  serialized_end=2199,
+)
+
+
+_TESTRELEASERESPONSE = _descriptor.Descriptor(
+  name='TestReleaseResponse',
+  full_name='hapi.services.tiller.TestReleaseResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='msg', full_name='hapi.services.tiller.TestReleaseResponse.msg', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=2201,
+  serialized_end=2235,
 )
 
 _LISTRELEASESREQUEST.fields_by_name['sort_by'].enum_type = _LISTSORT_SORTBY
@@ -897,6 +1057,8 @@ DESCRIPTOR.message_types_by_name['GetVersionRequest'] = _GETVERSIONREQUEST
 DESCRIPTOR.message_types_by_name['GetVersionResponse'] = _GETVERSIONRESPONSE
 DESCRIPTOR.message_types_by_name['GetHistoryRequest'] = _GETHISTORYREQUEST
 DESCRIPTOR.message_types_by_name['GetHistoryResponse'] = _GETHISTORYRESPONSE
+DESCRIPTOR.message_types_by_name['TestReleaseRequest'] = _TESTRELEASEREQUEST
+DESCRIPTOR.message_types_by_name['TestReleaseResponse'] = _TESTRELEASERESPONSE
 
 ListReleasesRequest = _reflection.GeneratedProtocolMessageType('ListReleasesRequest', (_message.Message,), dict(
   DESCRIPTOR = _LISTRELEASESREQUEST,
@@ -1031,6 +1193,20 @@ GetHistoryResponse = _reflection.GeneratedProtocolMessageType('GetHistoryRespons
   ))
 _sym_db.RegisterMessage(GetHistoryResponse)
 
+TestReleaseRequest = _reflection.GeneratedProtocolMessageType('TestReleaseRequest', (_message.Message,), dict(
+  DESCRIPTOR = _TESTRELEASEREQUEST,
+  __module__ = 'hapi.services.tiller_pb2'
+  # @@protoc_insertion_point(class_scope:hapi.services.tiller.TestReleaseRequest)
+  ))
+_sym_db.RegisterMessage(TestReleaseRequest)
+
+TestReleaseResponse = _reflection.GeneratedProtocolMessageType('TestReleaseResponse', (_message.Message,), dict(
+  DESCRIPTOR = _TESTRELEASERESPONSE,
+  __module__ = 'hapi.services.tiller_pb2'
+  # @@protoc_insertion_point(class_scope:hapi.services.tiller.TestReleaseResponse)
+  ))
+_sym_db.RegisterMessage(TestReleaseResponse)
+
 
 DESCRIPTOR.has_options = True
 DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('Z\010services'))
@@ -1111,6 +1287,11 @@ try:
           '/hapi.services.tiller.ReleaseService/GetHistory',
           request_serializer=GetHistoryRequest.SerializeToString,
           response_deserializer=GetHistoryResponse.FromString,
+          )
+      self.RunReleaseTest = channel.unary_stream(
+          '/hapi.services.tiller.ReleaseService/RunReleaseTest',
+          request_serializer=TestReleaseRequest.SerializeToString,
+          response_deserializer=TestReleaseResponse.FromString,
           )
 
 
@@ -1197,6 +1378,13 @@ try:
       context.set_details('Method not implemented!')
       raise NotImplementedError('Method not implemented!')
 
+    def RunReleaseTest(self, request, context):
+      """RunReleaseTest executes the tests defined of a named release
+      """
+      context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+      context.set_details('Method not implemented!')
+      raise NotImplementedError('Method not implemented!')
+
 
   def add_ReleaseServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -1244,6 +1432,11 @@ try:
             servicer.GetHistory,
             request_deserializer=GetHistoryRequest.FromString,
             response_serializer=GetHistoryResponse.SerializeToString,
+        ),
+        'RunReleaseTest': grpc.unary_stream_rpc_method_handler(
+            servicer.RunReleaseTest,
+            request_deserializer=TestReleaseRequest.FromString,
+            response_serializer=TestReleaseResponse.SerializeToString,
         ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -1309,6 +1502,10 @@ try:
       context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
     def GetHistory(self, request, context):
       """ReleaseHistory retrieves a releasse's history.
+      """
+      context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
+    def RunReleaseTest(self, request, context):
+      """RunReleaseTest executes the tests defined of a named release
       """
       context.code(beta_interfaces.StatusCode.UNIMPLEMENTED)
 
@@ -1381,6 +1578,10 @@ try:
       """
       raise NotImplementedError()
     GetHistory.future = None
+    def RunReleaseTest(self, request, timeout, metadata=None, with_call=False, protocol_options=None):
+      """RunReleaseTest executes the tests defined of a named release
+      """
+      raise NotImplementedError()
 
 
   def beta_create_ReleaseService_server(servicer, pool=None, pool_size=None, default_timeout=None, maximum_timeout=None):
@@ -1397,6 +1598,7 @@ try:
       ('hapi.services.tiller.ReleaseService', 'InstallRelease'): InstallReleaseRequest.FromString,
       ('hapi.services.tiller.ReleaseService', 'ListReleases'): ListReleasesRequest.FromString,
       ('hapi.services.tiller.ReleaseService', 'RollbackRelease'): RollbackReleaseRequest.FromString,
+      ('hapi.services.tiller.ReleaseService', 'RunReleaseTest'): TestReleaseRequest.FromString,
       ('hapi.services.tiller.ReleaseService', 'UninstallRelease'): UninstallReleaseRequest.FromString,
       ('hapi.services.tiller.ReleaseService', 'UpdateRelease'): UpdateReleaseRequest.FromString,
     }
@@ -1408,6 +1610,7 @@ try:
       ('hapi.services.tiller.ReleaseService', 'InstallRelease'): InstallReleaseResponse.SerializeToString,
       ('hapi.services.tiller.ReleaseService', 'ListReleases'): ListReleasesResponse.SerializeToString,
       ('hapi.services.tiller.ReleaseService', 'RollbackRelease'): RollbackReleaseResponse.SerializeToString,
+      ('hapi.services.tiller.ReleaseService', 'RunReleaseTest'): TestReleaseResponse.SerializeToString,
       ('hapi.services.tiller.ReleaseService', 'UninstallRelease'): UninstallReleaseResponse.SerializeToString,
       ('hapi.services.tiller.ReleaseService', 'UpdateRelease'): UpdateReleaseResponse.SerializeToString,
     }
@@ -1419,6 +1622,7 @@ try:
       ('hapi.services.tiller.ReleaseService', 'InstallRelease'): face_utilities.unary_unary_inline(servicer.InstallRelease),
       ('hapi.services.tiller.ReleaseService', 'ListReleases'): face_utilities.unary_stream_inline(servicer.ListReleases),
       ('hapi.services.tiller.ReleaseService', 'RollbackRelease'): face_utilities.unary_unary_inline(servicer.RollbackRelease),
+      ('hapi.services.tiller.ReleaseService', 'RunReleaseTest'): face_utilities.unary_stream_inline(servicer.RunReleaseTest),
       ('hapi.services.tiller.ReleaseService', 'UninstallRelease'): face_utilities.unary_unary_inline(servicer.UninstallRelease),
       ('hapi.services.tiller.ReleaseService', 'UpdateRelease'): face_utilities.unary_unary_inline(servicer.UpdateRelease),
     }
@@ -1440,6 +1644,7 @@ try:
       ('hapi.services.tiller.ReleaseService', 'InstallRelease'): InstallReleaseRequest.SerializeToString,
       ('hapi.services.tiller.ReleaseService', 'ListReleases'): ListReleasesRequest.SerializeToString,
       ('hapi.services.tiller.ReleaseService', 'RollbackRelease'): RollbackReleaseRequest.SerializeToString,
+      ('hapi.services.tiller.ReleaseService', 'RunReleaseTest'): TestReleaseRequest.SerializeToString,
       ('hapi.services.tiller.ReleaseService', 'UninstallRelease'): UninstallReleaseRequest.SerializeToString,
       ('hapi.services.tiller.ReleaseService', 'UpdateRelease'): UpdateReleaseRequest.SerializeToString,
     }
@@ -1451,6 +1656,7 @@ try:
       ('hapi.services.tiller.ReleaseService', 'InstallRelease'): InstallReleaseResponse.FromString,
       ('hapi.services.tiller.ReleaseService', 'ListReleases'): ListReleasesResponse.FromString,
       ('hapi.services.tiller.ReleaseService', 'RollbackRelease'): RollbackReleaseResponse.FromString,
+      ('hapi.services.tiller.ReleaseService', 'RunReleaseTest'): TestReleaseResponse.FromString,
       ('hapi.services.tiller.ReleaseService', 'UninstallRelease'): UninstallReleaseResponse.FromString,
       ('hapi.services.tiller.ReleaseService', 'UpdateRelease'): UpdateReleaseResponse.FromString,
     }
@@ -1462,6 +1668,7 @@ try:
       'InstallRelease': cardinality.Cardinality.UNARY_UNARY,
       'ListReleases': cardinality.Cardinality.UNARY_STREAM,
       'RollbackRelease': cardinality.Cardinality.UNARY_UNARY,
+      'RunReleaseTest': cardinality.Cardinality.UNARY_STREAM,
       'UninstallRelease': cardinality.Cardinality.UNARY_UNARY,
       'UpdateRelease': cardinality.Cardinality.UNARY_UNARY,
     }

@@ -74,6 +74,11 @@ class ReleaseServiceStub(object):
         request_serializer=hapi_dot_services_dot_tiller__pb2.GetHistoryRequest.SerializeToString,
         response_deserializer=hapi_dot_services_dot_tiller__pb2.GetHistoryResponse.FromString,
         )
+    self.RunReleaseTest = channel.unary_stream(
+        '/hapi.services.tiller.ReleaseService/RunReleaseTest',
+        request_serializer=hapi_dot_services_dot_tiller__pb2.TestReleaseRequest.SerializeToString,
+        response_deserializer=hapi_dot_services_dot_tiller__pb2.TestReleaseResponse.FromString,
+        )
 
 
 class ReleaseServiceServicer(object):
@@ -159,6 +164,13 @@ class ReleaseServiceServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
+  def RunReleaseTest(self, request, context):
+    """RunReleaseTest executes the tests defined of a named release
+    """
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
 
 def add_ReleaseServiceServicer_to_server(servicer, server):
   rpc_method_handlers = {
@@ -206,6 +218,11 @@ def add_ReleaseServiceServicer_to_server(servicer, server):
           servicer.GetHistory,
           request_deserializer=hapi_dot_services_dot_tiller__pb2.GetHistoryRequest.FromString,
           response_serializer=hapi_dot_services_dot_tiller__pb2.GetHistoryResponse.SerializeToString,
+      ),
+      'RunReleaseTest': grpc.unary_stream_rpc_method_handler(
+          servicer.RunReleaseTest,
+          request_deserializer=hapi_dot_services_dot_tiller__pb2.TestReleaseRequest.FromString,
+          response_serializer=hapi_dot_services_dot_tiller__pb2.TestReleaseResponse.SerializeToString,
       ),
   }
   generic_handler = grpc.method_handlers_generic_handler(
