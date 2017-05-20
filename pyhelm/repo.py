@@ -1,8 +1,10 @@
+import cStringIO
 import itertools
 import os
 import pygit2
 import requests
 import shutil
+import tarfile
 import tempfile
 import yaml
 
@@ -30,12 +32,20 @@ def from_repo(repo_url, chart, version=None):
 
     try:
         metadata = sorted(versions, key=lambda x: x['version'])[0]
-        with open(os.path.join(_tmp_dir, 'Chart.yaml'), 'w') as chart_file:
-            chart_file.write(yaml.dump(metadata))
+        for url in metadata['urls']:
+            fname = url.split('/')[-1]
+            try:
+                req = requests.get(url, stream=True)
+                fobj = cStringIO.StringIO(req.content)
+                tar = tarfile.open(mode="r:*", fileobj=fobj)
+                tar.extractall(_tmp_dir)
+                return os.path.join(_tmp_dir, chart)
+            except:
+                # NOTE(flaper87): Catch requests errors
+                # and untar errors
+                pass
     except IndexError:
         raise RuntimeError('Chart version %s not found' % version)
-
-    return _tmp_dir
 
 
 def git_clone(repo_url, branch='master'):
