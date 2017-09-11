@@ -56,10 +56,9 @@ class ChartBuilder(object):
 
         subpath = self.chart.source.get('subpath', '')
 
-        if not self.chart.source.type:
-            LOG.exception("Unknown source type %s for chart %s",
-                          self.chart.name,
-                          self.chart.source.type)
+        if not 'type' in self.chart.source:
+            LOG.exception("Need source type for chart %s",
+                          self.chart.name)
             return
 
         if self.parent:
@@ -75,10 +74,18 @@ class ChartBuilder(object):
             self._source_tmp_dir = repo.git_clone(self.chart.source.location,
                                                   self.chart.source.reference)
 
-        if self.chart.source.type == 'repo':
+        elif self.chart.source.type == 'repo':
             self._source_tmp_dir = repo.from_repo(self.chart.source.location,
                                                   self.chart.name,
                                                   self.chart.version)
+        elif self.chart.source.type == 'directory':
+            self._source_tmp_dir = self.chart.source.location
+
+        else:
+            LOG.exception("Unknown source type %s for chart %s",
+                          self.chart.name,
+                          self.chart.source.type)
+            return
 
         return os.path.join(self._source_tmp_dir, subpath)
 
