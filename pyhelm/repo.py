@@ -1,7 +1,7 @@
 import cStringIO
 import itertools
 import os
-import pygit2
+from git import Repo
 import requests
 import shutil
 import tarfile
@@ -52,7 +52,7 @@ def git_clone(repo_url, branch='master'):
     """clones repo to a /tmp/ dir"""
 
     _tmp_dir = tempfile.mkdtemp(prefix='pyhelm-', dir='/tmp')
-    pygit2.clone_repository(repo_url, _tmp_dir, checkout_branch=branch)
+    repo = Repo.clone_from(repo_url, _tmp_dir, branch=branch)
 
     return _tmp_dir
 
