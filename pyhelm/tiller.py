@@ -20,7 +20,7 @@ class Tiller(object):
     service over gRPC
     '''
 
-    def __init__(self, host, port=44134):
+    def __init__(self, host, port=44134, timeout=TILLER_TIMEOUT):
 
         # init k8s connectivity
         self._host = host
@@ -30,9 +30,7 @@ class Tiller(object):
         self.channel = self.get_channel()
 
         # init timeout for all requests
-        # and assume eventually this will
-        # be fed at runtime as an override
-        self.timeout = TILLER_TIMEOUT
+        self.timeout = timeout
 
     @property
     def metadata(self):
