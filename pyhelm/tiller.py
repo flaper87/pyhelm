@@ -9,7 +9,7 @@ from hapi.chart.config_pb2 import Config
 
 LOG = logging.getLogger('pyhelm')
 TILLER_PORT = 44134
-TILLER_VERSION = b'2.3.1'
+TILLER_VERSION = b'2.9.1'
 TILLER_TIMEOUT = 300
 RELEASE_LIMIT = 64
 
