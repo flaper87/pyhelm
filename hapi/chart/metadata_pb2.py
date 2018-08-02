@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='hapi/chart/metadata.proto',
   package='hapi.chart',
   syntax='proto3',
-  serialized_pb=_b('\n\x19hapi/chart/metadata.proto\x12\nhapi.chart\")\n\nMaintainer\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05\x65mail\x18\x02 \x01(\t\"\xb9\x02\n\x08Metadata\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04home\x18\x02 \x01(\t\x12\x0f\n\x07sources\x18\x03 \x03(\t\x12\x0f\n\x07version\x18\x04 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t\x12\x10\n\x08keywords\x18\x06 \x03(\t\x12+\n\x0bmaintainers\x18\x07 \x03(\x0b\x32\x16.hapi.chart.Maintainer\x12\x0e\n\x06\x65ngine\x18\x08 \x01(\t\x12\x0c\n\x04icon\x18\t \x01(\t\x12\x12\n\napiVersion\x18\n \x01(\t\x12\x11\n\tcondition\x18\x0b \x01(\t\x12\x0c\n\x04tags\x18\x0c \x01(\t\x12\x12\n\nappVersion\x18\r \x01(\t\x12\x12\n\ndeprecated\x18\x0e \x01(\x08\" \n\x06\x45ngine\x12\x0b\n\x07UNKNOWN\x10\x00\x12\t\n\x05GOTPL\x10\x01\x42\x07Z\x05\x63hartb\x06proto3')
+  serialized_pb=_b('\n\x19hapi/chart/metadata.proto\x12\nhapi.chart\"6\n\nMaintainer\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05\x65mail\x18\x02 \x01(\t\x12\x0b\n\x03url\x18\x03 \x01(\t\"\xd5\x03\n\x08Metadata\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04home\x18\x02 \x01(\t\x12\x0f\n\x07sources\x18\x03 \x03(\t\x12\x0f\n\x07version\x18\x04 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x05 \x01(\t\x12\x10\n\x08keywords\x18\x06 \x03(\t\x12+\n\x0bmaintainers\x18\x07 \x03(\x0b\x32\x16.hapi.chart.Maintainer\x12\x0e\n\x06\x65ngine\x18\x08 \x01(\t\x12\x0c\n\x04icon\x18\t \x01(\t\x12\x12\n\napiVersion\x18\n \x01(\t\x12\x11\n\tcondition\x18\x0b \x01(\t\x12\x0c\n\x04tags\x18\x0c \x01(\t\x12\x12\n\nappVersion\x18\r \x01(\t\x12\x12\n\ndeprecated\x18\x0e \x01(\x08\x12\x15\n\rtillerVersion\x18\x0f \x01(\t\x12:\n\x0b\x61nnotations\x18\x10 \x03(\x0b\x32%.hapi.chart.Metadata.AnnotationsEntry\x12\x13\n\x0bkubeVersion\x18\x11 \x01(\t\x1a\x32\n\x10\x41nnotationsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\" \n\x06\x45ngine\x12\x0b\n\x07UNKNOWN\x10\x00\x12\t\n\x05GOTPL\x10\x01\x42\x07Z\x05\x63hartb\x06proto3')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -42,8 +42,8 @@ _METADATA_ENGINE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=366,
-  serialized_end=398,
+  serialized_start=535,
+  serialized_end=567,
 )
 _sym_db.RegisterEnumDescriptor(_METADATA_ENGINE)
 
@@ -69,6 +69,13 @@ _MAINTAINER = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='url', full_name='hapi.chart.Maintainer.url', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -82,9 +89,46 @@ _MAINTAINER = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=41,
-  serialized_end=82,
+  serialized_end=95,
 )
 
+
+_METADATA_ANNOTATIONSENTRY = _descriptor.Descriptor(
+  name='AnnotationsEntry',
+  full_name='hapi.chart.Metadata.AnnotationsEntry',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='hapi.chart.Metadata.AnnotationsEntry.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='hapi.chart.Metadata.AnnotationsEntry.value', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=_descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001')),
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=483,
+  serialized_end=533,
+)
 
 _METADATA = _descriptor.Descriptor(
   name='Metadata',
@@ -191,10 +235,31 @@ _METADATA = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='tillerVersion', full_name='hapi.chart.Metadata.tillerVersion', index=14,
+      number=15, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='annotations', full_name='hapi.chart.Metadata.annotations', index=15,
+      number=16, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='kubeVersion', full_name='hapi.chart.Metadata.kubeVersion', index=16,
+      number=17, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
-  nested_types=[],
+  nested_types=[_METADATA_ANNOTATIONSENTRY, ],
   enum_types=[
     _METADATA_ENGINE,
   ],
@@ -204,11 +269,13 @@ _METADATA = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=85,
-  serialized_end=398,
+  serialized_start=98,
+  serialized_end=567,
 )
 
+_METADATA_ANNOTATIONSENTRY.containing_type = _METADATA
 _METADATA.fields_by_name['maintainers'].message_type = _MAINTAINER
+_METADATA.fields_by_name['annotations'].message_type = _METADATA_ANNOTATIONSENTRY
 _METADATA_ENGINE.containing_type = _METADATA
 DESCRIPTOR.message_types_by_name['Maintainer'] = _MAINTAINER
 DESCRIPTOR.message_types_by_name['Metadata'] = _METADATA
@@ -221,15 +288,25 @@ Maintainer = _reflection.GeneratedProtocolMessageType('Maintainer', (_message.Me
 _sym_db.RegisterMessage(Maintainer)
 
 Metadata = _reflection.GeneratedProtocolMessageType('Metadata', (_message.Message,), dict(
+
+  AnnotationsEntry = _reflection.GeneratedProtocolMessageType('AnnotationsEntry', (_message.Message,), dict(
+    DESCRIPTOR = _METADATA_ANNOTATIONSENTRY,
+    __module__ = 'hapi.chart.metadata_pb2'
+    # @@protoc_insertion_point(class_scope:hapi.chart.Metadata.AnnotationsEntry)
+    ))
+  ,
   DESCRIPTOR = _METADATA,
   __module__ = 'hapi.chart.metadata_pb2'
   # @@protoc_insertion_point(class_scope:hapi.chart.Metadata)
   ))
 _sym_db.RegisterMessage(Metadata)
+_sym_db.RegisterMessage(Metadata.AnnotationsEntry)
 
 
 DESCRIPTOR.has_options = True
 DESCRIPTOR._options = _descriptor._ParseOptions(descriptor_pb2.FileOptions(), _b('Z\005chart'))
+_METADATA_ANNOTATIONSENTRY.has_options = True
+_METADATA_ANNOTATIONSENTRY._options = _descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001'))
 try:
   # THESE ELEMENTS WILL BE DEPRECATED.
   # Please use the generated *_pb2_grpc.py files instead.
