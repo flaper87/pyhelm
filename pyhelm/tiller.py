@@ -148,7 +148,7 @@ class Tiller(object):
         self._post_update_actions(post_actions, namespace)
 
     def install_release(self, chart, namespace, dry_run=False,
-                        name=None, values=None):
+                        name=None, values=None, wait=False):
         """
         Create a Helm Release
         """
@@ -162,7 +162,8 @@ class Tiller(object):
             dry_run=dry_run,
             values=values,
             name=name or '',
-            namespace=namespace)
+            namespace=namespace,
+            wait=wait)
         return stub.InstallRelease(release_request,
                                    self.timeout,
                                    metadata=self.metadata)
