@@ -151,8 +151,7 @@ class ChartBuilder(object):
                                                    'templates'), topdown=True):
             for tpl_file in files:
                 tname = os.path.relpath(os.path.join(root, tpl_file),
-                                        os.path.join(self.source_directory,
-                                                     'templates'))
+                                        self.source_directory)
 
                 templates.append(Template(name=tname,
                                           data=open(os.path.join(root,
