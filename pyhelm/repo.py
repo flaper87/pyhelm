@@ -48,13 +48,13 @@ def from_repo(repo_url, chart, version=None):
         raise RuntimeError('Chart version %s not found' % version)
 
 
-def git_clone(repo_url, branch='master'):
+def git_clone(repo_url, branch='master', path=''):
     """clones repo to a /tmp/ dir"""
 
     _tmp_dir = tempfile.mkdtemp(prefix='pyhelm-', dir='/tmp')
     repo = Repo.clone_from(repo_url, _tmp_dir, branch=branch)
 
-    return _tmp_dir
+    return os.path.join(_tmp_dir, path)
 
 
 def source_cleanup(target_dir):
