@@ -64,15 +64,12 @@ class Tiller(object):
         stub = ReleaseServiceStub(self.channel)
 
         while (offset is None or len(offset) > 0):
-
             req = ListReleasesRequest(limit=RELEASE_LIMIT,offset=offset)
             release_list = stub.ListReleases(req, self.timeout,
-                                            metadata=self.metadata)
-        
+                                             metadata=self.metadata)
             for y in release_list:
                 offset = str(y.next)
                 releases.extend(y.releases)
-        
         return releases
 
     def list_charts(self):
