@@ -7,7 +7,7 @@ from hapi.chart.template_pb2 import Template
 from hapi.chart.chart_pb2 import Chart
 from hapi.chart.metadata_pb2 import Metadata
 from hapi.chart.config_pb2 import Config
-from supermutes.dot import dotify
+from google.protobuf.any_pb2 import Any
 
 from pyhelm import repo
 from supermutes.dot import dotify
@@ -119,10 +119,27 @@ class ChartBuilder(object):
     def get_files(self):
         '''
         Return (non-template) files in this chart
-
-        TODO(alanmeadows): Not implemented
         '''
-        return []
+        # TODO(yanivoliver): add support for .helmignore
+        # TODO(yanivoliver): refactor seriously to be similar to what Helm does
+        #                    (https://github.com/helm/helm/blob/master/pkg/chartutil/load.go)
+        chart_files = []
+
+        for root, _, files in os.walk(self.source_directory):
+            if root.endswith("charts") or root.endswith("templates"):
+                continue
+
+            for file in files:
+                if file in (".helmignore", "Chart.yaml", "values.toml", "values.yaml"):
+                    continue
+
+                filename = os.path.relpath(os.path.join(root, file),
+                                           self.source_directory)
+
+                with open(os.path.join(root, file), "r") as fd:
+                    chart_files.append(Any(type_url=filename, value=fd.read()))
+
+        return chart_files
 
     def get_values(self):
         '''
@@ -153,12 +170,12 @@ class ChartBuilder(object):
             LOG.warn("Chart %s has no templates directory,"
                      "no templates will be deployed", self.chart.name)
         for root, _, files in os.walk(os.path.join(self.source_directory,
-                                                   'templates'), topdown=True):
+                                                   'templates')):
             for tpl_file in files:
-                tname = os.path.relpath(os.path.join(root, tpl_file),
-                                        self.source_directory)
+                template_name = os.path.relpath(os.path.join(root, tpl_file),
+                                                self.source_directory)
 
-                templates.append(Template(name=tname,
+                templates.append(Template(name=template_name,
                                           data=open(os.path.join(root,
                                                                  tpl_file),
                                                     'r').read()))
@@ -171,8 +188,7 @@ class ChartBuilder(object):
 
         if self._helm_chart:
             return self._helm_chart
-        # dependencies
-        # [process_chart(x, is_dependency=True) for x in chart.dependencies]
+
         dependencies = []
 
         for chart in self.chart.get('dependencies', []):
