@@ -1,4 +1,4 @@
-import logging
+import logger
 import os
 import yaml
 
@@ -12,8 +12,6 @@ from google.protobuf.any_pb2 import Any
 from pyhelm import repo
 from supermutes.dot import dotify
 
-LOG = logging.getLogger('pyhelm')
-
 
 class ChartBuilder(object):
     '''
@@ -24,6 +22,8 @@ class ChartBuilder(object):
     It also processes chart source declarations, fetching chart
     source from external resources where necessary
     '''
+
+    _logger = logger.get_logger('ChartBuilder')
 
     def __init__(self, chart, parent=None):
         '''
@@ -57,18 +57,18 @@ class ChartBuilder(object):
         subpath = self.chart.source.get('subpath', '')
 
         if not 'type' in self.chart.source:
-            LOG.exception("Need source type for chart %s",
-                          self.chart.name)
+            self._logger.exception("Need source type for chart %s",
+                                   self.chart.name)
             return
 
         if self.parent:
-            LOG.info("Cloning %s/%s as dependency for %s",
-                     self.chart.source.location,
-                     subpath, self.parent)
+            self._logger.info("Cloning %s/%s as dependency for %s",
+                              self.chart.source.location,
+                              subpath, self.parent)
         else:
-            LOG.info("Cloning %s/%s for release %s",
-                     self.chart.source.location,
-                     subpath, self.chart.name)
+            self._logger.info("Cloning %s/%s for release %s",
+                              self.chart.source.location,
+                              subpath, self.chart.name)
 
         if self.chart.source.type == 'git':
             if 'reference' not in self.chart.source:
@@ -87,9 +87,9 @@ class ChartBuilder(object):
             self._source_tmp_dir = self.chart.source.location
 
         else:
-            LOG.exception("Unknown source type %s for chart %s",
-                          self.chart.name,
-                          self.chart.source.type)
+            self._logger.exception("Unknown source type %s for chart %s",
+                                   self.chart.name,
+                                   self.chart.source.type)
             return
 
         return os.path.join(self._source_tmp_dir, subpath)
@@ -106,8 +106,8 @@ class ChartBuilder(object):
         Process metadata
         '''
         # extract Chart.yaml to construct metadata
-        chart_yaml = dotify(yaml.load(open(
-            os.path.join(self.source_directory, 'Chart.yaml')).read()))
+        with open(os.path.join(self.source_directory, 'Chart.yaml')) as fd:
+            chart_yaml = dotify(yaml.load(fd.read()))
 
         # construct Metadata object
         return Metadata(
@@ -148,11 +148,11 @@ class ChartBuilder(object):
 
         # create config object representing unmarshaled values.yaml
         if os.path.exists(os.path.join(self.source_directory, 'values.yaml')):
-            raw_values = open(os.path.join(self.source_directory,
-                                           'values.yaml')).read()
+            with open(os.path.join(self.source_directory, 'values.yaml')) as fd:
+                raw_values = fd.read()
         else:
-            LOG.warn("No values.yaml in %s, using empty values",
-                     self.source_directory)
+            self._logger.warn("No values.yaml in %s, using empty values",
+                              self.source_directory)
             raw_values = ''
 
         return Config(raw=raw_values)
@@ -167,8 +167,8 @@ class ChartBuilder(object):
         templates = []
         if not os.path.exists(os.path.join(self.source_directory,
                                            'templates')):
-            LOG.warn("Chart %s has no templates directory,"
-                     "no templates will be deployed", self.chart.name)
+            self._logger.warn("Chart %s has no templates directory,"
+                              "no templates will be deployed", self.chart.name)
         for root, _, files in os.walk(os.path.join(self.source_directory,
                                                    'templates')):
             for tpl_file in files:
@@ -192,8 +192,8 @@ class ChartBuilder(object):
         dependencies = []
 
         for chart in self.chart.get('dependencies', []):
-            LOG.info("Building dependency chart %s for release %s", chart.name,
-                     self.chart.name)
+            self._logger.info("Building dependency chart %s for release %s", 
+                              chart.name, self.chart.name)
             dependencies.append(ChartBuilder(chart).get_helm_chart())
 
         helm_chart = Chart(
