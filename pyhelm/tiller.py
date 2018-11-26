@@ -60,12 +60,17 @@ class Tiller(object):
         List Helm Releases
         '''
         releases = []
+
+        offset = None
         stub = ReleaseServiceStub(self.channel)
-        req = ListReleasesRequest(limit=RELEASE_LIMIT)
-        release_list = stub.ListReleases(req, self.timeout,
-                                         metadata=self.metadata)
-        for y in release_list:
-            releases.extend(y.releases)
+
+        while (offset is None or len(offset) > 0):
+            req = ListReleasesRequest(limit=RELEASE_LIMIT,offset=offset)
+            release_list = stub.ListReleases(req, self.timeout,
+                                             metadata=self.metadata)
+            for y in release_list:
+                offset = str(y.next)
+                releases.extend(y.releases)
         return releases
 
     def list_charts(self):
