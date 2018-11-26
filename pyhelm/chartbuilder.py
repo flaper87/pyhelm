@@ -167,13 +167,20 @@ class ChartBuilder(object):
         templates = []
         if not os.path.exists(os.path.join(self.source_directory,
                                            'templates')):
-            self._logger.warn("Chart %s has no templates directory,"
+            self._logger.warn("Chart %s has no templates directory, "
                               "no templates will be deployed", self.chart.name)
         for root, _, files in os.walk(os.path.join(self.source_directory,
                                                    'templates')):
             for tpl_file in files:
                 template_name = os.path.relpath(os.path.join(root, tpl_file),
                                                 self.source_directory)
+
+                # TODO(yanivoliver): Find a better solution.
+                # We need this in order to support charts on Windows - Tiller will look
+                # for the templates it uses using the relative path, using Linuxish
+                # path seperators (/). Thus, sending the template list to Tiller
+                # from a Windows machine the lookup will fail.
+                template_name = template_name.replace("\\", "/")
 
                 templates.append(Template(name=template_name,
                                           data=open(os.path.join(root,
