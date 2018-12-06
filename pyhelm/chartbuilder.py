@@ -82,7 +82,8 @@ class ChartBuilder(object):
         elif self.chart.source.type == 'repo':
             self._source_tmp_dir = repo.from_repo(self.chart.source.location,
                                                   self.chart.name,
-                                                  self.chart.version)
+                                                  self.chart.version,
+                                                  self.chart.source.headers)
         elif self.chart.source.type == 'directory':
             self._source_tmp_dir = self.chart.source.location
 
