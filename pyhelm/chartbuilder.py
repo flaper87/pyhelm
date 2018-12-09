@@ -1,4 +1,4 @@
-import logging
+import logger
 import os
 import yaml
 
@@ -7,12 +7,10 @@ from hapi.chart.template_pb2 import Template
 from hapi.chart.chart_pb2 import Chart
 from hapi.chart.metadata_pb2 import Metadata
 from hapi.chart.config_pb2 import Config
-from supermutes.dot import dotify
+from google.protobuf.any_pb2 import Any
 
 from pyhelm import repo
 from supermutes.dot import dotify
-
-LOG = logging.getLogger('pyhelm')
 
 
 class ChartBuilder(object):
@@ -24,6 +22,8 @@ class ChartBuilder(object):
     It also processes chart source declarations, fetching chart
     source from external resources where necessary
     '''
+
+    _logger = logger.get_logger('ChartBuilder')
 
     def __init__(self, chart, parent=None):
         '''
@@ -57,18 +57,18 @@ class ChartBuilder(object):
         subpath = self.chart.source.get('subpath', '')
 
         if not 'type' in self.chart.source:
-            LOG.exception("Need source type for chart %s",
-                          self.chart.name)
+            self._logger.exception("Need source type for chart %s",
+                                   self.chart.name)
             return
 
         if self.parent:
-            LOG.info("Cloning %s/%s as dependency for %s",
-                     self.chart.source.location,
-                     subpath, self.parent)
+            self._logger.info("Cloning %s/%s as dependency for %s",
+                              self.chart.source.location,
+                              subpath, self.parent)
         else:
-            LOG.info("Cloning %s/%s for release %s",
-                     self.chart.source.location,
-                     subpath, self.chart.name)
+            self._logger.info("Cloning %s/%s for release %s",
+                              self.chart.source.location,
+                              subpath, self.chart.name)
 
         if self.chart.source.type == 'git':
             if 'reference' not in self.chart.source:
@@ -82,14 +82,15 @@ class ChartBuilder(object):
         elif self.chart.source.type == 'repo':
             self._source_tmp_dir = repo.from_repo(self.chart.source.location,
                                                   self.chart.name,
-                                                  self.chart.version)
+                                                  self.chart.version,
+                                                  self.chart.source.headers)
         elif self.chart.source.type == 'directory':
             self._source_tmp_dir = self.chart.source.location
 
         else:
-            LOG.exception("Unknown source type %s for chart %s",
-                          self.chart.name,
-                          self.chart.source.type)
+            self._logger.exception("Unknown source type %s for chart %s",
+                                   self.chart.name,
+                                   self.chart.source.type)
             return
 
         return os.path.join(self._source_tmp_dir, subpath)
@@ -106,8 +107,8 @@ class ChartBuilder(object):
         Process metadata
         '''
         # extract Chart.yaml to construct metadata
-        chart_yaml = dotify(yaml.load(open(
-            os.path.join(self.source_directory, 'Chart.yaml')).read()))
+        with open(os.path.join(self.source_directory, 'Chart.yaml')) as fd:
+            chart_yaml = dotify(yaml.load(fd.read()))
 
         # construct Metadata object
         return Metadata(
@@ -119,10 +120,27 @@ class ChartBuilder(object):
     def get_files(self):
         '''
         Return (non-template) files in this chart
-
-        TODO(alanmeadows): Not implemented
         '''
-        return []
+        # TODO(yanivoliver): add support for .helmignore
+        # TODO(yanivoliver): refactor seriously to be similar to what Helm does
+        #                    (https://github.com/helm/helm/blob/master/pkg/chartutil/load.go)
+        chart_files = []
+
+        for root, _, files in os.walk(self.source_directory):
+            if root.endswith("charts") or root.endswith("templates"):
+                continue
+
+            for file in files:
+                if file in (".helmignore", "Chart.yaml", "values.toml", "values.yaml"):
+                    continue
+
+                filename = os.path.relpath(os.path.join(root, file),
+                                           self.source_directory)
+
+                with open(os.path.join(root, file), "r") as fd:
+                    chart_files.append(Any(type_url=filename, value=fd.read()))
+
+        return chart_files
 
     def get_values(self):
         '''
@@ -131,11 +149,11 @@ class ChartBuilder(object):
 
         # create config object representing unmarshaled values.yaml
         if os.path.exists(os.path.join(self.source_directory, 'values.yaml')):
-            raw_values = open(os.path.join(self.source_directory,
-                                           'values.yaml')).read()
+            with open(os.path.join(self.source_directory, 'values.yaml')) as fd:
+                raw_values = fd.read()
         else:
-            LOG.warn("No values.yaml in %s, using empty values",
-                     self.source_directory)
+            self._logger.warn("No values.yaml in %s, using empty values",
+                              self.source_directory)
             raw_values = ''
 
         return Config(raw=raw_values)
@@ -150,15 +168,22 @@ class ChartBuilder(object):
         templates = []
         if not os.path.exists(os.path.join(self.source_directory,
                                            'templates')):
-            LOG.warn("Chart %s has no templates directory,"
-                     "no templates will be deployed", self.chart.name)
+            self._logger.warn("Chart %s has no templates directory, "
+                              "no templates will be deployed", self.chart.name)
         for root, _, files in os.walk(os.path.join(self.source_directory,
-                                                   'templates'), topdown=True):
+                                                   'templates')):
             for tpl_file in files:
-                tname = os.path.relpath(os.path.join(root, tpl_file),
-                                        self.source_directory)
+                template_name = os.path.relpath(os.path.join(root, tpl_file),
+                                                self.source_directory)
 
-                templates.append(Template(name=tname,
+                # TODO(yanivoliver): Find a better solution.
+                # We need this in order to support charts on Windows - Tiller will look
+                # for the templates it uses using the relative path, using Linuxish
+                # path seperators (/). Thus, sending the template list to Tiller
+                # from a Windows machine the lookup will fail.
+                template_name = template_name.replace("\\", "/")
+
+                templates.append(Template(name=template_name,
                                           data=open(os.path.join(root,
                                                                  tpl_file),
                                                     'r').read()))
@@ -171,13 +196,12 @@ class ChartBuilder(object):
 
         if self._helm_chart:
             return self._helm_chart
-        # dependencies
-        # [process_chart(x, is_dependency=True) for x in chart.dependencies]
+
         dependencies = []
 
         for chart in self.chart.get('dependencies', []):
-            LOG.info("Building dependency chart %s for release %s", chart.name,
-                     self.chart.name)
+            self._logger.info("Building dependency chart %s for release %s", 
+                              chart.name, self.chart.name)
             dependencies.append(ChartBuilder(chart).get_helm_chart())
 
         helm_chart = Chart(

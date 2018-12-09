@@ -9,17 +9,17 @@ import tempfile
 import yaml
 
 
-def repo_index(repo_url):
+def repo_index(repo_url, headers=None):
     """Downloads the Chart's repo index"""
     index_url = os.path.join(repo_url, 'index.yaml')
-    index = requests.get(index_url)
+    index = requests.get(index_url, headers=headers)
     return yaml.load(index.content)
 
 
-def from_repo(repo_url, chart, version=None):
+def from_repo(repo_url, chart, version=None, headers=None):
     """Downloads the chart from a repo."""
     _tmp_dir = tempfile.mkdtemp(prefix='pyhelm-', dir='/tmp')
-    index = repo_index(repo_url)
+    index = repo_index(repo_url, headers)
 
     if chart not in index['entries']:
         raise RuntimeError('Chart not found in repo')
@@ -35,7 +35,7 @@ def from_repo(repo_url, chart, version=None):
         for url in metadata['urls']:
             fname = url.split('/')[-1]
             try:
-                req = requests.get(url, stream=True)
+                req = requests.get(url, stream=True, headers=headers)
                 fobj = cStringIO.StringIO(req.content)
                 tar = tarfile.open(mode="r:*", fileobj=fobj)
                 tar.extractall(_tmp_dir)
