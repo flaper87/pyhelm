@@ -51,30 +51,37 @@ def _get_from_s3(repo_url, file_url):
         elif e.response['Error']['Code'] == 'NoSuchKey':
             raise RuntimeError('%s not found in the repository' % file_url_parsed.path.strip('/'))
         else:
-            pass
+            raise
+
+def _get_from_repo(repo_scheme, repo_url, file_url):
+    """Wrap download from specific repository"""
+
+    if repo_scheme == 's3':
+        return _get_from_s3(
+            repo_url,
+            file_url,
+        )
+    elif repo_scheme in ('http', 'https'):
+        return _get_from_http(
+            repo_url,
+            file_url,
+        )
+    else:
+        raise RuntimeError('The %s repository not supported' % repo_scheme.upper())
 
 def repo_index(repo_url):
     """Downloads the Chart's repo index"""
     repo_scheme = urlparse(repo_url).scheme
 
-    if repo_scheme == 's3':
-        return yaml.load(
-            _get_from_s3(
-                repo_url,
-                'index.yaml',
-            )
+    return yaml.load(
+        _get_from_repo(
+            repo_scheme,
+            repo_url,
+            'index.yaml',
         )
-    elif repo_scheme in ('http', 'https'):
-        return yaml.load(
-            _get_from_http(
-                repo_url,
-                'index.yaml',
-            )
-        )
-    else:
-        raise RuntimeError('The %s repository not supported' % repo_scheme.upper())
+    )
 
-def from_repo(repo_url, chart, version=None, headers=None):
+def from_repo(repo_url, chart, version=None):
     """Downloads the chart from a repo."""
     _tmp_dir = tempfile.mkdtemp(prefix='pyhelm-', dir='/tmp')
     repo_scheme = urlparse(repo_url).scheme
@@ -93,22 +100,13 @@ def from_repo(repo_url, chart, version=None, headers=None):
         for url in metadata['urls']:
             fname = url.split('/')[-1]
             try:
-                if repo_scheme == 's3':
-                    fobj = cStringIO.StringIO(
-                        _get_from_s3(
-                            repo_url,
-                            url,
-                        )
+                fobj = cStringIO.StringIO(
+                    _get_from_repo(
+                        repo_scheme,
+                        repo_url,
+                        url,
                     )
-                elif repo_scheme in ('http', 'https'):
-                    fobj = cStringIO.StringIO(
-                        _get_from_http(
-                            repo_url,
-                            url,
-                        )
-                    )
-                else:
-                    raise RuntimeError('The %s repository not supported' % repo_scheme.upper())
+                )
 
                 tar = tarfile.open(mode="r:*", fileobj=fobj)
                 tar.extractall(_tmp_dir)
