@@ -91,8 +91,7 @@ class Tiller(object):
         return charts
 
     def update_release(self, chart, dry_run, namespace, name=None,
-                       pre_actions=None, post_actions=None,
-                       disable_hooks=False, values=None):
+                       disable_hooks=False, values=None, wait=False):
         '''
         Update a Helm Release
         '''
@@ -106,10 +105,8 @@ class Tiller(object):
             dry_run=dry_run,
             disable_hooks=disable_hooks,
             values=values,
-            name=name or '')
-
-        stub.UpdateRelease(release_request, self.timeout,
-                           metadata=self.metadata)
+            name=name or '',
+            wait=wait)
 
         return stub.UpdateRelease(release_request, self.timeout, metadata=self.metadata)
 
