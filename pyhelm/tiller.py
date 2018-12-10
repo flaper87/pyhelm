@@ -3,7 +3,8 @@ import yaml
 import logger
 
 from hapi.services.tiller_pb2 import ReleaseServiceStub, ListReleasesRequest, \
-    InstallReleaseRequest, UpdateReleaseRequest, UninstallReleaseRequest
+    InstallReleaseRequest, UpdateReleaseRequest, UninstallReleaseRequest, \
+    GetReleaseStatusRequest, GetReleaseContentRequest
 from hapi.chart.chart_pb2 import Chart
 from hapi.chart.config_pb2 import Config
 
@@ -190,6 +191,22 @@ class Tiller(object):
         return stub.UninstallRelease(release_request,
                                      self.timeout,
                                      metadata=self.metadata)
+
+    def get_release_status(self, release, version=None):
+        stub = ReleaseServiceStub(self.channel)
+        status_request = GetReleaseStatusRequest(name=release,
+                                                 version=version)
+        return stub.GetReleaseStatus(status_request,
+                                     self.timeout,
+                                     metadata=self.metadata)
+
+    def get_release_content(self, release, version=None):
+        stub = ReleaseServiceStub(self.channel)
+        status_request = GetReleaseContentRequest(name=release,
+                                                  version=version)
+        return stub.GetReleaseContent(status_request,
+                                      self.timeout,
+                                      metadata=self.metadata)
 
     def chart_cleanup(self, prefix, charts):
         """
