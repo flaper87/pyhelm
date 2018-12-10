@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='hapi/release/hook.proto',
   package='hapi.release',
   syntax='proto3',
-  serialized_pb=_b('\n\x17hapi/release/hook.proto\x12\x0chapi.release\x1a\x1fgoogle/protobuf/timestamp.proto\"\x80\x04\n\x04Hook\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04kind\x18\x02 \x01(\t\x12\x0c\n\x04path\x18\x03 \x01(\t\x12\x10\n\x08manifest\x18\x04 \x01(\t\x12(\n\x06\x65vents\x18\x05 \x03(\x0e\x32\x18.hapi.release.Hook.Event\x12,\n\x08last_run\x18\x06 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0e\n\x06weight\x18\x07 \x01(\x05\x12\x38\n\x0f\x64\x65lete_policies\x18\x08 \x03(\x0e\x32\x1f.hapi.release.Hook.DeletePolicy\"\xd4\x01\n\x05\x45vent\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x0f\n\x0bPRE_INSTALL\x10\x01\x12\x10\n\x0cPOST_INSTALL\x10\x02\x12\x0e\n\nPRE_DELETE\x10\x03\x12\x0f\n\x0bPOST_DELETE\x10\x04\x12\x0f\n\x0bPRE_UPGRADE\x10\x05\x12\x10\n\x0cPOST_UPGRADE\x10\x06\x12\x10\n\x0cPRE_ROLLBACK\x10\x07\x12\x11\n\rPOST_ROLLBACK\x10\x08\x12\x18\n\x14RELEASE_TEST_SUCCESS\x10\t\x12\x18\n\x14RELEASE_TEST_FAILURE\x10\n\"C\n\x0c\x44\x65letePolicy\x12\r\n\tSUCCEEDED\x10\x00\x12\n\n\x06\x46\x41ILED\x10\x01\x12\x18\n\x14\x42\x45\x46ORE_HOOK_CREATION\x10\x02\x42\tZ\x07releaseb\x06proto3')
+  serialized_pb=_b('\n\x17hapi/release/hook.proto\x12\x0chapi.release\x1a\x1fgoogle/protobuf/timestamp.proto\"\x91\x04\n\x04Hook\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x0c\n\x04kind\x18\x02 \x01(\t\x12\x0c\n\x04path\x18\x03 \x01(\t\x12\x10\n\x08manifest\x18\x04 \x01(\t\x12(\n\x06\x65vents\x18\x05 \x03(\x0e\x32\x18.hapi.release.Hook.Event\x12,\n\x08last_run\x18\x06 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x0e\n\x06weight\x18\x07 \x01(\x05\x12\x38\n\x0f\x64\x65lete_policies\x18\x08 \x03(\x0e\x32\x1f.hapi.release.Hook.DeletePolicy\"\xe5\x01\n\x05\x45vent\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x0f\n\x0bPRE_INSTALL\x10\x01\x12\x10\n\x0cPOST_INSTALL\x10\x02\x12\x0e\n\nPRE_DELETE\x10\x03\x12\x0f\n\x0bPOST_DELETE\x10\x04\x12\x0f\n\x0bPRE_UPGRADE\x10\x05\x12\x10\n\x0cPOST_UPGRADE\x10\x06\x12\x10\n\x0cPRE_ROLLBACK\x10\x07\x12\x11\n\rPOST_ROLLBACK\x10\x08\x12\x18\n\x14RELEASE_TEST_SUCCESS\x10\t\x12\x18\n\x14RELEASE_TEST_FAILURE\x10\n\x12\x0f\n\x0b\x43RD_INSTALL\x10\x0b\"C\n\x0c\x44\x65letePolicy\x12\r\n\tSUCCEEDED\x10\x00\x12\n\n\x06\x46\x41ILED\x10\x01\x12\x18\n\x14\x42\x45\x46ORE_HOOK_CREATION\x10\x02\x42\tZ\x07releaseb\x06proto3')
   ,
   dependencies=[google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,])
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
@@ -77,11 +77,15 @@ _HOOK_EVENT = _descriptor.EnumDescriptor(
       name='RELEASE_TEST_FAILURE', index=10, number=10,
       options=None,
       type=None),
+    _descriptor.EnumValueDescriptor(
+      name='CRD_INSTALL', index=11, number=11,
+      options=None,
+      type=None),
   ],
   containing_type=None,
   options=None,
   serialized_start=306,
-  serialized_end=518,
+  serialized_end=535,
 )
 _sym_db.RegisterEnumDescriptor(_HOOK_EVENT)
 
@@ -106,8 +110,8 @@ _HOOK_DELETEPOLICY = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=520,
-  serialized_end=587,
+  serialized_start=537,
+  serialized_end=604,
 )
 _sym_db.RegisterEnumDescriptor(_HOOK_DELETEPOLICY)
 
@@ -190,7 +194,7 @@ _HOOK = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=75,
-  serialized_end=587,
+  serialized_end=604,
 )
 
 _HOOK.fields_by_name['events'].enum_type = _HOOK_EVENT
