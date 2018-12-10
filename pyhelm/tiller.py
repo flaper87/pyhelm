@@ -90,46 +90,6 @@ class Tiller(object):
                 continue
         return charts
 
-    def _pre_update_actions(self, actions, namespace):
-        '''
-        :params actions - array of items actions
-        :params namespace - name of pod for actions
-        '''
-        try:
-            for action in actions.get('delete', []):
-                name = action.get("name")
-                action_type = action.get("type")
-                if "job" in action_type:
-                    self._logger.info("Deleting %s in namespace: %s", name, namespace)
-                    self.k8s.delete_job_action(name, namespace)
-                    continue
-                self._logger.error("Unable to execute name: %s type: %s", name, type)
-        except Exception:
-            self._logger.debug("PRE: Could not delete anything, please check yaml")
-
-        try:
-            for action in actions.get('create', []):
-                name = action.get("name")
-                action_type = action.get("type")
-                if "job" in action_type:
-                    self._logger.info("Creating %s in namespace: %s", name, namespace)
-                    self.k8s.create_job_action(name, action_type)
-                    continue
-        except Exception:
-            self._logger.debug("PRE: Could not create anything, please check yaml")
-
-    def _post_update_actions(self, actions, namespace):
-        try:
-            for action in actions.get('create', []):
-                name = action.get("name")
-                action_type = action.get("type")
-                if "job" in action_type:
-                    self._logger.info("Creating %s in namespace: %s", name, namespace)
-                    self.k8s.create_job_action(name, action_type)
-                    continue
-        except Exception:
-            self._logger.debug("POST: Could not create anything, please check yaml")
-
     def update_release(self, chart, dry_run, namespace, name=None,
                        pre_actions=None, post_actions=None,
                        disable_hooks=False, values=None):
@@ -138,7 +98,6 @@ class Tiller(object):
         '''
 
         values = Config(raw=yaml.safe_dump(values or {}))
-        self._pre_update_actions(pre_actions, namespace)
 
         # build release install request
         stub = ReleaseServiceStub(self.channel)
@@ -152,7 +111,7 @@ class Tiller(object):
         stub.UpdateRelease(release_request, self.timeout,
                            metadata=self.metadata)
 
-        self._post_update_actions(post_actions, namespace)
+        return stub.UpdateRelease(release_request, self.timeout, metadata=self.metadata)
 
     def install_release(self, chart, namespace, dry_run=False,
                         name=None, values=None, wait=False):
