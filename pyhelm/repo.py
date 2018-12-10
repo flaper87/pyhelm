@@ -18,7 +18,7 @@ def repo_index(repo_url, headers=None):
 
 def from_repo(repo_url, chart, version=None, headers=None):
     """Downloads the chart from a repo."""
-    _tmp_dir = tempfile.mkdtemp(prefix='pyhelm-', dir='/tmp')
+    _tmp_dir = tempfile.mkdtemp(prefix='pyhelm-')
     index = repo_index(repo_url, headers)
 
     if chart not in index['entries']:
