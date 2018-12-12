@@ -8,8 +8,6 @@ import shutil
 import tarfile
 import tempfile
 import yaml
-import boto3.s3
-from botocore.exceptions import ClientError
 
 
 def _get_from_http(repo_url, file_url, **kwargs):
@@ -23,6 +21,8 @@ def _get_from_http(repo_url, file_url, **kwargs):
 
 def _get_from_s3(repo_url, file_url):
     """Download the index / Chart from S3 bucket"""
+    import boto3.s3
+    from botocore.exceptions import ClientError
 
     s3_client = boto3.client('s3')
 
@@ -84,8 +84,8 @@ def repo_index(repo_url, headers=None):
     )
 
 def from_repo(repo_url, chart, version=None, headers=None):
-    """Downloads the chart from a repo."""
-    _tmp_dir = tempfile.mkdtemp(prefix='pyhelm-', dir='/tmp')
+    """Downloads the chart from a repo to a temporary dir, the path of which is determined by the platform"""
+    _tmp_dir = tempfile.mkdtemp(prefix='pyhelm-')
     repo_scheme = urlparse(repo_url).scheme
     index = repo_index(repo_url, headers)
 
@@ -106,7 +106,7 @@ def from_repo(repo_url, chart, version=None, headers=None):
                     _get_from_repo(
                         repo_scheme,
                         repo_url,
-                        url,
+                        fname,
                         stream=True,
                         headers=headers,
                     )
@@ -124,9 +124,9 @@ def from_repo(repo_url, chart, version=None, headers=None):
 
 
 def git_clone(repo_url, branch='master', path=''):
-    """clones repo to a /tmp/ dir"""
+    """clones repo to a temporary dir, the path of which is determined by the platform"""
 
-    _tmp_dir = tempfile.mkdtemp(prefix='pyhelm-', dir='/tmp')
+    _tmp_dir = tempfile.mkdtemp(prefix='pyhelm-')
     repo = Repo.clone_from(repo_url, _tmp_dir, branch=branch)
 
     return os.path.join(_tmp_dir, path)
