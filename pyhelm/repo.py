@@ -12,7 +12,7 @@ import yaml
 
 def _get_from_http(repo_url, file_url, **kwargs):
     """Downloads the Chart's repo index from HTTP(S)"""
-    
+
     if repo_url not in file_url:
         file_url = os.path.join(repo_url, file_url)
 
@@ -35,7 +35,7 @@ def _get_from_s3(repo_url, file_url):
     # turning them into absolute is needed.
     if repo_url not in file_url:
         file_url = os.path.join(repo_url, file_url)
-    
+
     file_url_parsed = urlparse(file_url)
 
     try:
@@ -98,7 +98,7 @@ def from_repo(repo_url, chart, version=None, headers=None):
         versions = itertools.ifilter(lambda k: k['version'] == version,
                                      versions)
     try:
-        metadata = sorted(versions, key=lambda x: x['version'])[0]
+        metadata = sorted(versions, key=lambda x: list(map(int, x['version'].split('.'))))[0]
         for url in metadata['urls']:
             fname = url.split('/')[-1]
             try:
