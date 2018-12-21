@@ -80,6 +80,10 @@ class ChartBuilder(object):
                                                   self.chart.source.path)
 
         elif self.chart.source.type == 'repo':
+            if 'version' not in self.chart:
+                self.chart.version = None
+            if 'headers' not in self.chart.source:
+                self.chart.source.headers = None
             self._source_tmp_dir = repo.from_repo(self.chart.source.location,
                                                   self.chart.name,
                                                   self.chart.version,
