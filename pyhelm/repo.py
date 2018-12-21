@@ -98,7 +98,7 @@ def from_repo(repo_url, chart, version=None, headers=None):
         versions = itertools.ifilter(lambda k: k['version'] == version,
                                      versions)
     try:
-        metadata = sorted(versions, key=lambda x: list(map(int, x['version'].split('.'))))[0]
+        metadata = sorted(versions, key=lambda x: list(map(int, x['version'].split('.'))))[-1]
         for url in metadata['urls']:
             fname = url.split('/')[-1]
             try:
