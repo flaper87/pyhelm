@@ -80,6 +80,10 @@ class ChartBuilder(object):
                                                   self.chart.source.path)
 
         elif self.chart.source.type == 'repo':
+            if 'version' not in self.chart:
+                self.chart.version = None
+            if 'headers' not in self.chart.source:
+                self.chart.source.headers = None
             self._source_tmp_dir = repo.from_repo(self.chart.source.location,
                                                   self.chart.name,
                                                   self.chart.version,
@@ -136,6 +140,13 @@ class ChartBuilder(object):
 
                 filename = os.path.relpath(os.path.join(root, file),
                                            self.source_directory)
+
+                # TODO(yanivoliver): Find a better solution.
+                # We need this in order to support charts on Windows - Tiller will look
+                # for the files it uses using the relative path, using Linuxish
+                # path seperators (/). Thus, sending the file list to Tiller
+                # from a Windows machine the lookup will fail.
+                filename = filename.replace("\\", "/")
 
                 with open(os.path.join(root, file), "r") as fd:
                     chart_files.append(Any(type_url=filename, value=fd.read()))
