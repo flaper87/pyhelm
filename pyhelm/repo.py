@@ -13,7 +13,7 @@ import yaml
 def _get_from_http(repo_url, file_url, **kwargs):
     """Downloads the Chart's repo index from HTTP(S)"""
 
-    if repo_url not in file_url:
+    if not bool(urlparse(file_url).netloc):
         file_url = os.path.join(repo_url, file_url)
 
     index = requests.get(file_url, **kwargs)
@@ -33,7 +33,7 @@ def _get_from_s3(repo_url, file_url):
     # generated index.yaml may have the relative
     # URLs (guess due to its multi-tenancy), so
     # turning them into absolute is needed.
-    if repo_url not in file_url:
+    if not bool(urlparse(file_url).netloc):
         file_url = os.path.join(repo_url, file_url)
 
     file_url_parsed = urlparse(file_url)
