@@ -106,7 +106,7 @@ def from_repo(repo_url, chart, version=None, headers=None):
                     _get_from_repo(
                         repo_scheme,
                         repo_url,
-                        fname,
+                        url,
                         stream=True,
                         headers=headers,
                     )
