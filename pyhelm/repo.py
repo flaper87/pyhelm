@@ -17,6 +17,8 @@ def _get_from_http(repo_url, file_url, **kwargs):
         file_url = os.path.join(repo_url, file_url)
 
     index = requests.get(file_url, **kwargs)
+    if index.status_code >= 400:
+        raise RuntimeError('GET %s failed (%d): %s' % (file_url, index.status_code, index.text))
     return index.content
 
 def _get_from_s3(repo_url, file_url):
