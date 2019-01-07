@@ -118,7 +118,7 @@ def from_repo(repo_url, chart, version=None, headers=None):
             except:
                 # NOTE(flaper87): Catch requests errors
                 # and untar errors
-                pass
+                raise
     except IndexError:
         raise RuntimeError('Chart version %s not found' % version)
 
