@@ -1,12 +1,13 @@
 import grpc
 import yaml
-import logger
 
-from hapi.services.tiller_pb2 import ReleaseServiceStub, ListReleasesRequest, \
-    InstallReleaseRequest, UpdateReleaseRequest, UninstallReleaseRequest, \
-    GetReleaseStatusRequest, GetReleaseContentRequest
-from hapi.chart.chart_pb2 import Chart
+import pyhelm.logger as logger
 from hapi.chart.config_pb2 import Config
+from hapi.chart.chart_pb2 import Chart
+
+from hapi.services.tiller_pb2 import GetReleaseContentRequest, GetReleaseStatusRequest, InstallReleaseRequest, \
+    ListReleasesRequest, ReleaseServiceStub, UninstallReleaseRequest, UpdateReleaseRequest
+
 
 TILLER_PORT = 44134
 TILLER_VERSION = b'2.11'

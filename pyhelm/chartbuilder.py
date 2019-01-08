@@ -1,16 +1,16 @@
-import logger
 import os
+
 import yaml
-
-from hapi.services.tiller_pb2 import GetReleaseContentRequest
-from hapi.chart.template_pb2 import Template
-from hapi.chart.chart_pb2 import Chart
-from hapi.chart.metadata_pb2 import Metadata
-from hapi.chart.config_pb2 import Config
 from google.protobuf.any_pb2 import Any
-
-from pyhelm import repo
 from supermutes.dot import dotify
+
+import pyhelm.logger as logger
+from hapi.chart.chart_pb2 import Chart
+from hapi.chart.config_pb2 import Config
+from hapi.chart.metadata_pb2 import Metadata
+from hapi.chart.template_pb2 import Template
+from hapi.services.tiller_pb2 import GetReleaseContentRequest
+from pyhelm import repo
 
 
 class ChartBuilder(object):
@@ -211,7 +211,7 @@ class ChartBuilder(object):
         dependencies = []
 
         for chart in self.chart.get('dependencies', []):
-            self._logger.info("Building dependency chart %s for release %s", 
+            self._logger.info("Building dependency chart %s for release %s",
                               chart.name, self.chart.name)
             dependencies.append(ChartBuilder(chart).get_helm_chart())
 
