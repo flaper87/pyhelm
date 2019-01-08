@@ -1,4 +1,3 @@
-
 try:
     # Python 3
     from urllib.parse import urlparse
