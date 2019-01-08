@@ -1,13 +1,22 @@
-import cStringIO
+try:
+    from io import StringIO
+except ImportError:
+    import cStringIO as StringIO
+
+try:
+    from urllib.parse import urlparse
+except ImportError:
+    from urlparse import urlparse
+
 import itertools
 import os
-from git import Repo
-from urlparse import urlparse
-import requests
 import shutil
 import tarfile
 import tempfile
+
+import requests
 import yaml
+from git import Repo
 
 
 class HTTPGetError(RuntimeError):
@@ -130,13 +139,16 @@ def from_repo(repo_url, chart, version=None, headers=None):
     try:
         metadata = sorted(versions, key=_semver_sorter)[-1]
         for url in metadata['urls']:
-            fobj = cStringIO.StringIO(
-                _get_from_repo(
-                    repo_scheme,
-                    repo_url,
-                    url,
-                    stream=True,
-                    headers=headers,
+            fname = url.split('/')[-1]
+            try:
+                fobj = StringIO.StringIO(
+                    _get_from_repo(
+                        repo_scheme,
+                        repo_url,
+                        fname,
+                        stream=True,
+                        headers=headers,
+                    )
                 )
             )
 
