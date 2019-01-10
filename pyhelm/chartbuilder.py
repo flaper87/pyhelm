@@ -13,6 +13,12 @@ from hapi.services.tiller_pb2 import GetReleaseContentRequest
 from pyhelm import repo
 
 
+try:
+    import pathlib
+except ImportError:
+    import pathlib2 as pathlib
+
+
 class ChartBuilder(object):
     '''
     This class handles taking chart intentions as a paramter and
@@ -96,7 +102,6 @@ class ChartBuilder(object):
                                    self.chart.name,
                                    self.chart.source.type)
             return
-
         return os.path.join(self._source_tmp_dir, subpath)
 
 
@@ -111,8 +116,7 @@ class ChartBuilder(object):
         Process metadata
         '''
         # extract Chart.yaml to construct metadata
-        with open(os.path.join(self.source_directory, 'Chart.yaml')) as fd:
-            chart_yaml = dotify(yaml.load(fd.read()))
+        chart_yaml = dotify(yaml.load(pathlib.Path(self.source_directory) / 'Chart.yaml').read_text())
 
         # construct Metadata object
         return Metadata(
@@ -130,26 +134,25 @@ class ChartBuilder(object):
         #                    (https://github.com/helm/helm/blob/master/pkg/chartutil/load.go)
         chart_files = []
 
-        for root, _, files in os.walk(self.source_directory):
-            if root.endswith("charts") or root.endswith("templates"):
+        files = []
+        template_dir = pathlib.Path(self.source_directory) / 'templates'
+
+        if not template_dir.exists():
+            self._logger.warn("Chart %s has no templates directory, no templates will be deployed", self.chart.name)
+
+        for f in template_dir.glob('**/*'):
+            if not f.is_file():
                 continue
 
-            for file in files:
-                if file in (".helmignore", "Chart.yaml", "values.toml", "values.yaml"):
-                    continue
+            if f.name in (".helmignore", "Chart.yaml", "values.toml", "values.yaml"):
+                continue
 
-                filename = os.path.relpath(os.path.join(root, file),
-                                           self.source_directory)
-
-                # TODO(yanivoliver): Find a better solution.
-                # We need this in order to support charts on Windows - Tiller will look
-                # for the files it uses using the relative path, using Linuxish
-                # path seperators (/). Thus, sending the file list to Tiller
-                # from a Windows machine the lookup will fail.
-                filename = filename.replace("\\", "/")
-
-                with open(os.path.join(root, file), "r") as fd:
-                    chart_files.append(Any(type_url=filename, value=fd.read()))
+            chart_files.append(
+                Any(
+                    type_url=f.relative_to(self.source_directory).as_posix(),
+                    value=f.read_bytes(),
+                )
+            )
 
         return chart_files
 
@@ -158,14 +161,14 @@ class ChartBuilder(object):
         Return the chart (default) values
         '''
 
-        # create config object representing unmarshaled values.yaml
-        if os.path.exists(os.path.join(self.source_directory, 'values.yaml')):
-            with open(os.path.join(self.source_directory, 'values.yaml')) as fd:
-                raw_values = fd.read()
-        else:
+        values_path = pathlib.Path(self.source_directory) / 'values.yaml'
+
+        if not values_path.exists():
             self._logger.warn("No values.yaml in %s, using empty values",
                               self.source_directory)
             raw_values = ''
+        else:
+            raw_values = values_path.read_text()
 
         return Config(raw=raw_values)
 
@@ -177,27 +180,22 @@ class ChartBuilder(object):
         # process all files in templates/ as a template to attach to the chart
         # building a Template object
         templates = []
-        if not os.path.exists(os.path.join(self.source_directory,
-                                           'templates')):
-            self._logger.warn("Chart %s has no templates directory, "
-                              "no templates will be deployed", self.chart.name)
-        for root, _, files in os.walk(os.path.join(self.source_directory,
-                                                   'templates')):
-            for tpl_file in files:
-                template_name = os.path.relpath(os.path.join(root, tpl_file),
-                                                self.source_directory)
+        template_dir = pathlib.Path(self.source_directory) / 'templates'
 
-                # TODO(yanivoliver): Find a better solution.
-                # We need this in order to support charts on Windows - Tiller will look
-                # for the templates it uses using the relative path, using Linuxish
-                # path seperators (/). Thus, sending the template list to Tiller
-                # from a Windows machine the lookup will fail.
-                template_name = template_name.replace("\\", "/")
+        if not template_dir.exists():
+            self._logger.warn("Chart %s has no templates directory, no templates will be deployed", self.chart.name)
 
-                templates.append(Template(name=template_name,
-                                          data=open(os.path.join(root,
-                                                                 tpl_file),
-                                                    'r').read()))
+        for f in template_dir.glob('**/*'):
+            if not f.is_file():
+                continue
+
+            templates.append(
+                Template(
+                    name=f.relative_to(self.source_directory).as_posix(),
+                    data=f.read_bytes(),
+                )
+            )
+
         return templates
 
     def get_helm_chart(self):

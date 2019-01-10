@@ -1,15 +1,13 @@
-try:
-    from io import StringIO
-except ImportError:
-    import cStringIO as StringIO
 
 try:
+    # Python 3
     from urllib.parse import urlparse
 except ImportError:
+    # Python 2
     from urlparse import urlparse
 
-import itertools
 import os
+import io
 import shutil
 import tarfile
 import tempfile
@@ -92,7 +90,6 @@ def _get_from_s3(repo_url, file_url):
 
 def _get_from_repo(repo_scheme, repo_url, file_url, **kwargs):
     """Wrap download from specific repository"""
-
     if repo_scheme == 's3':
         return _get_from_s3(
             repo_url,
@@ -134,27 +131,28 @@ def from_repo(repo_url, chart, version=None, headers=None):
     versions = index['entries'][chart]
 
     if version is not None:
-        versions = itertools.ifilter(lambda k: k['version'] == version,
-                                     versions)
+        versions = [i for i in versions if i['version'] == version]
     try:
         metadata = sorted(versions, key=_semver_sorter)[-1]
         for url in metadata['urls']:
             fname = url.split('/')[-1]
-            try:
-                fobj = StringIO.StringIO(
-                    _get_from_repo(
-                        repo_scheme,
-                        repo_url,
-                        fname,
-                        stream=True,
-                        headers=headers,
-                    )
-                )
+            data = _get_from_repo(
+                repo_scheme,
+                repo_url,
+                fname,
+                stream=True,
+                headers=headers,
             )
+
+            if isinstance(data, bytes):
+                fobj = io.BytesIO(data)
+            else:
+                fobj = io.StringIO(data)
 
             tar = tarfile.open(mode="r:*", fileobj=fobj)
             tar.extractall(_tmp_dir)
             return os.path.join(_tmp_dir, chart)
+
     except IndexError:
         raise VersionError(version)
 
