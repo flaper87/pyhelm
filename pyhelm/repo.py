@@ -103,24 +103,19 @@ def from_repo(repo_url, chart, version=None, headers=None):
         metadata = sorted(versions, key=lambda x: list(map(int, x['version'].split('.'))))[-1]
         for url in metadata['urls']:
             fname = url.split('/')[-1]
-            try:
-                fobj = cStringIO.StringIO(
-                    _get_from_repo(
-                        repo_scheme,
-                        repo_url,
-                        fname,
-                        stream=True,
-                        headers=headers,
-                    )
+            fobj = cStringIO.StringIO(
+                _get_from_repo(
+                    repo_scheme,
+                    repo_url,
+                    fname,
+                    stream=True,
+                    headers=headers,
                 )
+            )
 
-                tar = tarfile.open(mode="r:*", fileobj=fobj)
-                tar.extractall(_tmp_dir)
-                return os.path.join(_tmp_dir, chart)
-            except:
-                # NOTE(flaper87): Catch requests errors
-                # and untar errors
-                raise
+            tar = tarfile.open(mode="r:*", fileobj=fobj)
+            tar.extractall(_tmp_dir)
+            return os.path.join(_tmp_dir, chart)
     except IndexError:
         raise RuntimeError('Chart version %s not found' % version)
 
