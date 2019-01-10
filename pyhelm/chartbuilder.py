@@ -116,7 +116,7 @@ class ChartBuilder(object):
         Process metadata
         '''
         # extract Chart.yaml to construct metadata
-        chart_yaml = dotify(yaml.load(pathlib.Path(self.source_directory) / 'Chart.yaml').read_text())
+        chart_yaml = dotify(yaml.load(pathlib.Path(self.source_directory, 'Chart.yaml').read_text())
 
         # construct Metadata object
         return Metadata(
@@ -134,8 +134,7 @@ class ChartBuilder(object):
         #                    (https://github.com/helm/helm/blob/master/pkg/chartutil/load.go)
         chart_files = []
 
-        files = []
-        template_dir = pathlib.Path(self.source_directory) / 'templates'
+        template_dir = pathlib.Path(self.source_directory, 'templates')
 
         if not template_dir.exists():
             self._logger.warn("Chart %s has no templates directory, no templates will be deployed", self.chart.name)
@@ -161,7 +160,7 @@ class ChartBuilder(object):
         Return the chart (default) values
         '''
 
-        values_path = pathlib.Path(self.source_directory) / 'values.yaml'
+        values_path = pathlib.Path(self.source_directory, 'values.yaml')
 
         if not values_path.exists():
             self._logger.warn("No values.yaml in %s, using empty values",
@@ -180,7 +179,7 @@ class ChartBuilder(object):
         # process all files in templates/ as a template to attach to the chart
         # building a Template object
         templates = []
-        template_dir = pathlib.Path(self.source_directory) / 'templates'
+        template_dir = pathlib.Path(self.source_directory, 'templates')
 
         if not template_dir.exists():
             self._logger.warn("Chart %s has no templates directory, no templates will be deployed", self.chart.name)

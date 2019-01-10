@@ -7,4 +7,5 @@ requests
 PyYAML
 boto3
 botocore
+pathlib2; python_version=='2.7'
 
