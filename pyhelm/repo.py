@@ -17,6 +17,8 @@ def _get_from_http(repo_url, file_url, **kwargs):
         file_url = os.path.join(repo_url, file_url)
 
     index = requests.get(file_url, **kwargs)
+    if index.status_code >= 400:
+        raise RuntimeError('GET %s failed (%d): %s' % (file_url, index.status_code, index.text))
     return index.content
 
 def _get_from_s3(repo_url, file_url):
@@ -101,24 +103,19 @@ def from_repo(repo_url, chart, version=None, headers=None):
         metadata = sorted(versions, key=lambda x: list(map(int, x['version'].split('.'))))[-1]
         for url in metadata['urls']:
             fname = url.split('/')[-1]
-            try:
-                fobj = cStringIO.StringIO(
-                    _get_from_repo(
-                        repo_scheme,
-                        repo_url,
-                        fname,
-                        stream=True,
-                        headers=headers,
-                    )
+            fobj = cStringIO.StringIO(
+                _get_from_repo(
+                    repo_scheme,
+                    repo_url,
+                    fname,
+                    stream=True,
+                    headers=headers,
                 )
+            )
 
-                tar = tarfile.open(mode="r:*", fileobj=fobj)
-                tar.extractall(_tmp_dir)
-                return os.path.join(_tmp_dir, chart)
-            except:
-                # NOTE(flaper87): Catch requests errors
-                # and untar errors
-                pass
+            tar = tarfile.open(mode="r:*", fileobj=fobj)
+            tar.extractall(_tmp_dir)
+            return os.path.join(_tmp_dir, chart)
     except IndexError:
         raise RuntimeError('Chart version %s not found' % version)
 
