@@ -63,7 +63,7 @@ metadata:
         cb._logger.exception.assert_called()
 
     @mock.patch('pyhelm.chartbuilder.repo.git_clone', return_value='/test')
-    def test_git(self, mock_repo):
+    def test_git(self, _0):
         cb = ChartBuilder({'name': 'foo',
                            'source': {'location': 'test',
                                       'type': 'git',
@@ -73,7 +73,7 @@ metadata:
         cb._logger.exception.assert_not_called()
 
     @mock.patch('pyhelm.chartbuilder.repo.from_repo', return_value='/test')
-    def test_repo(self, mock_repo):
+    def test_repo(self, _0):
         cb = ChartBuilder({'name': 'foo',
                            'source': {'location': 'test', 'type': 'repo'}})
         self.assertEquals(cb.source_directory, '/test/')
@@ -88,7 +88,7 @@ metadata:
         cb._logger.exception.assert_not_called()
 
     @mock.patch('pyhelm.chartbuilder.open', return_value=_chart)
-    def test_get_metadata(self, a):
+    def test_get_metadata(self, _0):
         cb = ChartBuilder({'name': '', 'source': {}})
         cb.source_directory = ''
         m = cb.get_metadata()
@@ -96,7 +96,7 @@ metadata:
 
     @mock.patch('pyhelm.chartbuilder.open', return_value=_file)
     @mock.patch('pyhelm.chartbuilder.os.walk', return_value=_files_walk)
-    def test_get_files(self, a, b):
+    def test_get_files(self, _0, _1):
         cb = ChartBuilder({'name': '', 'source': {}})
         cb.source_directory = 'test'
         f = cb.get_files()
@@ -111,7 +111,7 @@ metadata:
 
     @mock.patch('pyhelm.chartbuilder.open', return_value=_values)
     @mock.patch('pyhelm.chartbuilder.os.path.exists', return_value=True)
-    def test_get_values(self, a, b):
+    def test_get_values(self, _0, _1):
         cb = ChartBuilder({'name': '', 'source': {}})
         cb.source_directory = 'test'
         v = cb.get_values()
@@ -119,7 +119,7 @@ metadata:
 
     @mock.patch('pyhelm.chartbuilder.open', return_value=_template)
     @mock.patch('pyhelm.chartbuilder.os.walk', return_value=_templates_walk)
-    def test_get_templates(self, a, b):
+    def test_get_templates(self, _0, _1):
         cb = ChartBuilder({'name': '', 'source': {}})
         cb.source_directory = 'test'
         t = cb.get_templates()
@@ -132,9 +132,19 @@ metadata:
     @mock.patch('pyhelm.chartbuilder.ChartBuilder.get_values')
     @mock.patch('pyhelm.chartbuilder.ChartBuilder.get_files')
     @mock.patch('pyhelm.chartbuilder.Chart')
-    def test_get_helm_chart_exists(self, a, b, c, d, e):
+    def test_get_helm_chart_exists(self, _0, _1, _2, _3, _4):
         cb = ChartBuilder({'name': 'foo', 'source': {}, 'dependencies': [
             {'name': 'bar', 'source': {}}
         ]})
+        cb._helm_chart = '123'
+        self.assertEquals(cb.get_helm_chart(), '123')
+        cb._helm_chart = None
         cb.get_helm_chart()
         cb._logger.info.assert_called()
+
+    @mock.patch('pyhelm.chartbuilder.repo')
+    def test_source_cleanup(self, mock_repo):
+        ChartBuilder({'name': 'foo',
+                      'source': {'type': 'directory', 'location': 'test'}}
+                     ).source_cleanup()
+        mock_repo.source_cleanup.assert_called()

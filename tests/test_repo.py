@@ -38,7 +38,7 @@ entries:
 
     @mock.patch('pyhelm.repo.requests.get', return_value=_http404)
     @mock.patch('pyhelm.repo.tempfile.mkdtemp', return_value='')
-    def test_not_found(self, a, b):
+    def test_not_found(self, _0, _1):
         with self.assertRaises(repo.HTTPGetError):
             repo.from_repo('http://test', '')
         repo.requests.get.assert_called_once_with(
@@ -46,13 +46,13 @@ entries:
 
     @mock.patch('pyhelm.repo._get_from_http', return_value=_index)
     @mock.patch('pyhelm.repo.tempfile.mkdtemp', return_value='')
-    def test_chart_not_found(self, a, b):
+    def test_chart_not_found(self, _0, _1):
         with self.assertRaises(repo.ChartError):
             repo.from_repo('http://test', 'baz')
 
     @mock.patch('pyhelm.repo._get_from_http', return_value=_index)
     @mock.patch('pyhelm.repo.tempfile.mkdtemp', return_value='')
-    def test_version_not_found(self, a, b):
+    def test_version_not_found(self, _0, _1):
         with self.assertRaises(repo.VersionError):
             repo.from_repo('http://test', 'bar', version='1.0.0')
 
@@ -60,7 +60,7 @@ entries:
     @mock.patch('pyhelm.repo._get_from_repo', return_value='data')
     @mock.patch('pyhelm.repo.repo_index', return_value=yaml.load(_index))
     @mock.patch('pyhelm.repo.tempfile.mkdtemp', return_value='/tmp/dir')
-    def test_latest_version(self, a, b, c, d):
+    def test_latest_version(self, _0, _1, _2, _3):
         r = repo.from_repo('http://test', 'foo')
         self.assertEquals(r, '/tmp/dir/foo')
 
@@ -68,12 +68,17 @@ entries:
     @mock.patch('pyhelm.repo._get_from_repo', return_value='data')
     @mock.patch('pyhelm.repo.repo_index', return_value=yaml.load(_index))
     @mock.patch('pyhelm.repo.tempfile.mkdtemp', return_value='/tmp/dir')
-    def test_specific_version(self, a, b, c, d):
+    def test_specific_version(self, _0, _1, _2, _3):
         r = repo.from_repo('http://test', 'foo', version='0.1.2')
         self.assertEquals(r, '/tmp/dir/foo')
 
     @mock.patch('pyhelm.repo.tempfile.mkdtemp', return_value='/tmp/dir')
     @mock.patch('pyhelm.repo.Repo.clone_from', return_value='')
-    def test_git_clone(self, a, mocked_git):
+    def test_git_clone(self, _0, mocked_git):
         r = repo.git_clone('git://test', path='foo')
         self.assertEquals(r, '/tmp/dir/foo')
+
+    @mock.patch('pyhelm.repo.shutil')
+    def test_source_cleanup(self, mock_shutil):
+        repo.source_cleanup('foo')
+        mock_shutil.rmtree.assert_called_once_with('foo')
