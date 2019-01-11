@@ -21,3 +21,4 @@ doc/build
 .eggs/*
 # Files created by releasenotes build
 releasenotes/build
+__pycache__/
