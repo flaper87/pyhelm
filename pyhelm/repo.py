@@ -10,6 +10,9 @@ import tempfile
 import yaml
 
 
+def _semver_sorter(x):
+    return list(map(int, x['version'].split('.')))
+
 def _get_from_http(repo_url, file_url, **kwargs):
     """Downloads the Chart's repo index from HTTP(S)"""
 
@@ -100,7 +103,7 @@ def from_repo(repo_url, chart, version=None, headers=None):
         versions = itertools.ifilter(lambda k: k['version'] == version,
                                      versions)
     try:
-        metadata = sorted(versions, key=lambda x: list(map(int, x['version'].split('.'))))[-1]
+        metadata = sorted(versions, key=_semver_sorter)[-1]
         for url in metadata['urls']:
             fname = url.split('/')[-1]
             fobj = cStringIO.StringIO(
