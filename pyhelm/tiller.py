@@ -65,13 +65,21 @@ class Tiller(object):
         offset = None
         stub = ReleaseServiceStub(self._channel)
 
-        while (offset is None or len(offset) > 0):
+        while True:
             req = ListReleasesRequest(limit=RELEASE_LIMIT, offset=offset)
             release_list = stub.ListReleases(req, self._timeout,
                                              metadata=self.metadata)
+
             for y in release_list:
                 offset = str(y.next)
                 releases.extend(y.releases)
+
+            # This handles two cases:
+            # 1. If there are no releases, offset will not be set and will remain None
+            # 2. If there were releases, once we've fetched all of them, offset will be ""
+            if not offset:
+                break
+
         return releases
 
     def list_charts(self):
@@ -113,6 +121,7 @@ class Tiller(object):
                 # The release doesn't exist - it's time to install
                 self._logger.info(
                     "Release %s does not exist. Installing it now.", name)
+
                 return self.install_release(chart, namespace, dry_run,
                                             name, values, wait)
 
