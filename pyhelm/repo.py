@@ -10,6 +10,32 @@ import tempfile
 import yaml
 
 
+class HTTPGetError(RuntimeError):
+    def __init__(self, url, code, msg):
+        super(RuntimeError, self).__init__(
+            'GET %s failed (%d): %s', url, code, msg)
+
+
+class ChartError(RuntimeError):
+    def __init__(self):
+        super(RuntimeError, self).__init__('Chart not found in repo')
+
+
+class VersionError(RuntimeError):
+    def __init__(self, version):
+        super(RuntimeError, self).__init__(
+            'Chart version %s not found' % version)
+
+
+class SchemeError(RuntimeError):
+    def __init__(self, scheme):
+        super(RuntimeError, self).__init__(
+            'The %s repository not supported' % scheme)
+
+
+def _semver_sorter(x):
+    return list(map(int, x['version'].split('.')))
+
 def _get_from_http(repo_url, file_url, **kwargs):
     """Downloads the Chart's repo index from HTTP(S)"""
 
@@ -18,7 +44,7 @@ def _get_from_http(repo_url, file_url, **kwargs):
 
     index = requests.get(file_url, **kwargs)
     if index.status_code >= 400:
-        raise RuntimeError('GET %s failed (%d): %s' % (file_url, index.status_code, index.text))
+        raise HTTPGetError(file_url, index.status_code, index.text)
     return index.content
 
 def _get_from_s3(repo_url, file_url):
@@ -70,7 +96,7 @@ def _get_from_repo(repo_scheme, repo_url, file_url, **kwargs):
             **kwargs
         )
     else:
-        raise RuntimeError('The %s repository not supported' % repo_scheme.upper())
+        raise SchemeError(repo_scheme.upper())
 
 def repo_index(repo_url, headers=None):
     """Downloads the Chart's repo index"""
@@ -86,13 +112,15 @@ def repo_index(repo_url, headers=None):
     )
 
 def from_repo(repo_url, chart, version=None, headers=None):
-    """Downloads the chart from a repo to a temporary dir, the path of which is determined by the platform"""
+    """Downloads the chart from a repo to a temporary dir, the path of which is
+    determined by the platform.
+    """
     _tmp_dir = tempfile.mkdtemp(prefix='pyhelm-')
     repo_scheme = urlparse(repo_url).scheme
     index = repo_index(repo_url, headers)
 
     if chart not in index['entries']:
-        raise RuntimeError('Chart not found in repo')
+        raise ChartError()
 
     versions = index['entries'][chart]
 
@@ -100,7 +128,7 @@ def from_repo(repo_url, chart, version=None, headers=None):
         versions = itertools.ifilter(lambda k: k['version'] == version,
                                      versions)
     try:
-        metadata = sorted(versions, key=lambda x: list(map(int, x['version'].split('.'))))[-1]
+        metadata = sorted(versions, key=_semver_sorter)[-1]
         for url in metadata['urls']:
             fobj = cStringIO.StringIO(
                 _get_from_repo(
@@ -116,7 +144,7 @@ def from_repo(repo_url, chart, version=None, headers=None):
             tar.extractall(_tmp_dir)
             return os.path.join(_tmp_dir, chart)
     except IndexError:
-        raise RuntimeError('Chart version %s not found' % version)
+        raise VersionError(version)
 
 
 def git_clone(repo_url, branch='master', path=''):

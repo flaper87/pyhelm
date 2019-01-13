@@ -144,7 +144,8 @@ class Tiller(object):
             force=force,
             description=description)
 
-        return stub.UpdateRelease(release_request, self._timeout, metadata=self.metadata)
+        return stub.UpdateRelease(release_request, self._timeout,
+                                  metadata=self.metadata)
 
     def install_release(self, chart, namespace, dry_run=False,
                         name=None, values=None, wait=False,
