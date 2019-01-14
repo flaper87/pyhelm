@@ -8,6 +8,7 @@ import os
 import yaml
 import requests
 import pyhelm.repo as repo
+from botocore.exceptions import ClientError
 
 class TestRepo(TestCase):
     _http404 = requests.Response()
@@ -82,3 +83,29 @@ entries:
     def test_source_cleanup(self, mock_shutil):
         repo.source_cleanup('foo')
         mock_shutil.rmtree.assert_called_once_with('foo')
+
+    @mock.patch('boto3.client')
+    def test_get_from_s3_ok(self, mocked_s3client):
+        repo._get_from_repo('s3', 'test', 'bar')
+        mocked_s3client.return_value.get_object.assert_called()
+
+    @mock.patch('boto3.client')
+    def test_get_from_s3_repo_error(self, mocked_s3client):
+        mocked_s3client.return_value.get_object.side_effect = ClientError(
+            {'Error': {'Code': 'NoSuchBucket'}}, '')
+        with self.assertRaises(repo.RepositoryError):
+            repo._get_from_repo('s3', 'test', 'foo')
+
+    @mock.patch('boto3.client')
+    def test_get_from_s3_chart_error(self, mocked_s3client):
+        mocked_s3client.return_value.get_object.side_effect = ClientError(
+            {'Error': {'Code': 'NoSuchKey'}}, '')
+        with self.assertRaises(repo.ChartError):
+            repo._get_from_repo('s3', 'test', 'foo')
+
+    @mock.patch('boto3.client')
+    def test_get_from_s3_client_error(self, mocked_s3client):
+        mocked_s3client.return_value.get_object.side_effect = ClientError(
+            {'Error': {'Code': ''}}, '')
+        with self.assertRaises(ClientError):
+            repo._get_from_repo('s3', 'test', 'foo')
