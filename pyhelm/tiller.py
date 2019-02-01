@@ -1,6 +1,6 @@
 import grpc
 import yaml
-import logger
+import pyhelm.logger as logger
 
 from hapi.services.tiller_pb2 import ReleaseServiceStub, ListReleasesRequest, \
     InstallReleaseRequest, UpdateReleaseRequest, UninstallReleaseRequest, \
