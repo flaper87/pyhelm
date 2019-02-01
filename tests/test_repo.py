@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from unittest import TestCase
 try:
     from unittest import mock
@@ -13,7 +14,7 @@ class TestRepo(TestCase):
     _http404 = requests.Response()
     _http404.status_code = 404
 
-    _index = bytes('''
+    _index = u'''
 apiVersion: v1
 entries:
   foo:
@@ -30,7 +31,7 @@ entries:
     urls:
     - http://test/bar-0.1.0.tgz
     version: 0.1.0
-''')
+'''
 
     def test_wrong_scheme(self):
         with self.assertRaises(repo.SchemeError):
