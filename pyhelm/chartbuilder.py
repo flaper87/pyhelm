@@ -15,7 +15,7 @@ from supermutes.dot import dotify
 
 class ChartBuilder(object):
     '''
-    This class handles taking chart intentions as a paramter and
+    This class handles taking chart intentions as a parameter and
     turning those into proper protoc helm charts that can be
     pushed to tiller.
 
