@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from unittest import TestCase
 try:
     from unittest import mock
@@ -13,19 +14,19 @@ from pyhelm.chartbuilder import ChartBuilder
 
 class TestChartBuilder(TestCase):
 
-    _chart = io.StringIO(u'''
+    _chart = io.StringIO('''
 description: testing
 name: foobar
 version: 1.2.3
 ''')
 
-    _values = io.StringIO(u'''
+    _values = io.StringIO('''
 ---
 foo:
   bar: baz
 ''')
 
-    _file = io.BytesIO(bytes(''))
+    _file = io.BytesIO(b'')
 
     _files_walk = (x for x in [
         ('charts', '', []),
@@ -33,14 +34,14 @@ foo:
         ('files', '', ['.helmignore', 'Chart.yaml', 'data']),
     ])
 
-    _template = io.BytesIO(bytes('''
+    _template = io.BytesIO(b'''
 ---
 apiVersion: v1
 kind: Deployment
 metadata:
   name: {{ include "foo.fullname" . }}
   namespace: "{{ .Values.namespace }}"
-'''))
+''')
 
     _templates_walk = (x for x in [
         ('t', '', ['deployment.yaml'])

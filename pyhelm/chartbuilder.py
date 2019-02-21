@@ -1,4 +1,4 @@
-import logger
+import pyhelm.logger as logger
 import os
 import yaml
 

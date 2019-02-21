@@ -1,13 +1,15 @@
-import cStringIO
-import itertools
+import io
 import os
 from git import Repo
-from urlparse import urlparse
 import requests
 import shutil
 import tarfile
 import tempfile
 import yaml
+try:
+    from urllib.parse import urlparse
+except ImportError:
+    from urlparse import urlparse
 
 
 class HTTPGetError(RuntimeError):
@@ -125,20 +127,21 @@ def from_repo(repo_url, chart, version=None, headers=None):
     versions = index['entries'][chart]
 
     if version is not None:
-        versions = itertools.ifilter(lambda k: k['version'] == version,
-                                     versions)
+        versions = [i for i in versions if i['version'] == version]
     try:
         metadata = sorted(versions, key=_semver_sorter)[-1]
         for url in metadata['urls']:
-            fobj = cStringIO.StringIO(
-                _get_from_repo(
-                    repo_scheme,
-                    repo_url,
-                    url,
-                    stream=True,
-                    headers=headers,
-                )
+            data = _get_from_repo(
+                repo_scheme,
+                repo_url,
+                url,
+                stream=True,
+                headers=headers,
             )
+            if isinstance(data, bytes):
+                fobj = io.BytesIO(data)
+            else:
+                fobj = io.StringIO(data)
 
             tar = tarfile.open(mode="r:*", fileobj=fobj)
             tar.extractall(_tmp_dir)
