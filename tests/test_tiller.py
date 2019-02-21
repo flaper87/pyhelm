@@ -27,8 +27,13 @@ class TestTiller(TestCase):
     @mock.patch('pyhelm.tiller.ReleaseServiceStub')
     @mock.patch('pyhelm.tiller.grpc')
     def test_list_releases(self, _0, mock_release_service_stub):
-        mock_release_service_stub.ListReleases.return_value = iter([])
-        tiller.Tiller('test').list_releases()
+        mock_release_service_stub.return_value.ListReleases.return_value = [
+            dotify({'next': '', 'releases': ['foo']})
+        ]
+        r = tiller.Tiller('test').list_releases()
+        mock_release_service_stub.return_value.ListReleases.assert_called()
+        self.assertEquals(len(r), 1)
+        self.assertEquals(r[0], 'foo')
 
     @mock.patch('pyhelm.tiller.Tiller.list_releases')
     @mock.patch('pyhelm.tiller.grpc')
@@ -48,8 +53,7 @@ class TestTiller(TestCase):
         mock_release_service_stub.UpdateRelease.return_value = True
         mock_release_service_stub.GetReleaseStatus.return_value = dotify(
             {'namespace': 'testing'})
-        t = tiller.Tiller('test').update_release('foo', 'mynamespace',
-                                                 install=True)
+        t = tiller.Tiller('test').update_release('foo', '', install=True)
         tiller.Tiller._logger.warn.assert_called()
         self.assertTrue(t)
 

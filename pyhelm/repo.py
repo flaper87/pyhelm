@@ -19,8 +19,12 @@ class HTTPGetError(RuntimeError):
 
 
 class ChartError(RuntimeError):
-    def __init__(self):
-        super(RuntimeError, self).__init__('Chart not found in repo')
+    def __init__(self, chart=None):
+        if chart:
+            super(RuntimeError, self).__init__('Chart not found in repo')
+        else:
+            super(RuntimeError, self).__init__(
+                '%s not found in the repository' % chart)
 
 
 class VersionError(RuntimeError):
@@ -33,6 +37,12 @@ class SchemeError(RuntimeError):
     def __init__(self, scheme):
         super(RuntimeError, self).__init__(
             'The %s repository not supported' % scheme)
+
+
+class RepositoryError(RuntimeError):
+    def __init__(self, repository):
+        super(RuntimeError, self).__init__(
+            '%s repository not found' % repository)
 
 
 def _semver_sorter(x):
@@ -77,9 +87,9 @@ def _get_from_s3(repo_url, file_url):
         return file_object['Body'].read()
     except ClientError as e:
         if e.response['Error']['Code'] == 'NoSuchBucket':
-            raise RuntimeError('%s repository not found' % file_url_parsed.netloc)
+            raise RepositoryError(file_url_parsed.netloc)
         elif e.response['Error']['Code'] == 'NoSuchKey':
-            raise RuntimeError('%s not found in the repository' % file_url_parsed.path.strip('/'))
+            raise ChartError(file_url_parsed.path.strip('/'))
         else:
             raise
 

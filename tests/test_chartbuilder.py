@@ -47,6 +47,8 @@ metadata:
         ('t', '', ['deployment.yaml'])
     ])
 
+    _mock_source_clone = 'pyhelm.chartbuilder.ChartBuilder.source_clone'
+
     def setUp(self):
         ChartBuilder._logger = mock.Mock()
 
@@ -89,42 +91,37 @@ metadata:
         cb._logger.exception.assert_not_called()
 
     @mock.patch('pyhelm.chartbuilder.open', return_value=_chart)
-    def test_get_metadata(self, _0):
-        cb = ChartBuilder({'name': '', 'source': {}})
-        cb.source_directory = ''
-        m = cb.get_metadata()
+    @mock.patch(_mock_source_clone, return_value='')
+    def test_get_metadata(self, _0, _1):
+        m = ChartBuilder({}).get_metadata()
         self.assertIsInstance(m, Metadata)
 
     @mock.patch('pyhelm.chartbuilder.open', return_value=_file)
     @mock.patch('pyhelm.chartbuilder.os.walk', return_value=_files_walk)
-    def test_get_files(self, _0, _1):
-        cb = ChartBuilder({'name': '', 'source': {}})
-        cb.source_directory = 'test'
-        f = cb.get_files()
+    @mock.patch(_mock_source_clone, return_value='test')
+    def test_get_files(self, _0, _1, _2):
+        f = ChartBuilder({}).get_files()
         self.assertEquals(len(f), 1)
         self.assertIsInstance(f[0], Any)
 
-    def test_get_values_not_found(self):
-        cb = ChartBuilder({'name': '', 'source': {}})
-        cb.source_directory = 'test'
-        cb.get_values()
-        cb._logger.warn.assert_called()
+    @mock.patch(_mock_source_clone, return_value='test')
+    def test_get_values_not_found(self, _0):
+        ChartBuilder({}).get_values()
+        ChartBuilder._logger.warn.assert_called()
 
     @mock.patch('pyhelm.chartbuilder.open', return_value=_values)
     @mock.patch('pyhelm.chartbuilder.os.path.exists', return_value=True)
-    def test_get_values(self, _0, _1):
-        cb = ChartBuilder({'name': '', 'source': {}})
-        cb.source_directory = 'test'
-        v = cb.get_values()
+    @mock.patch(_mock_source_clone, return_value='test')
+    def test_get_values(self, _0, _1, _2):
+        v = ChartBuilder({}).get_values()
         self.assertIsInstance(v, Config)
 
     @mock.patch('pyhelm.chartbuilder.open', return_value=_template)
     @mock.patch('pyhelm.chartbuilder.os.walk', return_value=_templates_walk)
-    def test_get_templates(self, _0, _1):
-        cb = ChartBuilder({'name': '', 'source': {}})
-        cb.source_directory = 'test'
-        t = cb.get_templates()
-        cb._logger.warn.assert_called()
+    @mock.patch(_mock_source_clone, return_value='test')
+    def test_get_templates(self, _0, _1, _2):
+        t = ChartBuilder({'name': 'foo'}).get_templates()
+        ChartBuilder._logger.warn.assert_called()
         self.assertEquals(len(t), 1)
         self.assertIsInstance(t[0], Template)
 
