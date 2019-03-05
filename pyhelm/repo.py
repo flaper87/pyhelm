@@ -46,7 +46,7 @@ class RepositoryError(RuntimeError):
 
 
 def _semver_sorter(x):
-    return list(map(int, x['version'].split('.')))
+    return list(map(int, filter(lambda k: k in '0123456789.', x['version']).split('.')))
 
 def _get_from_http(repo_url, file_url, **kwargs):
     """Downloads the Chart's repo index from HTTP(S)"""
