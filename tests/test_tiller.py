@@ -6,6 +6,7 @@ except ImportError:
 
 from supermutes.dot import dotify
 import pyhelm.tiller as tiller
+import pyhelm.tls as tls
 
 class TestTiller(TestCase):
 
@@ -16,6 +17,12 @@ class TestTiller(TestCase):
     def test_get_channel(self, mock_grpc):
         tiller.Tiller('test')
         mock_grpc.insecure_channel.assert_called()
+
+    @mock.patch('pyhelm.tiller.grpc')
+    def test_get_channel_secure(self, mock_grpc):
+        mock_tls = mock.MagicMock(name='tls_config', spec=tls.TlsConfig)
+        tiller.Tiller('test', tls_config=mock_tls)
+        mock_grpc.secure_channel.assert_called()
 
     @mock.patch('pyhelm.tiller.grpc')
     def test_tiller_status(self, _0):
