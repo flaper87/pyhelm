@@ -41,5 +41,5 @@ class TlsConfig(object):
 
     @property
     def ca_data(self):
-        with open(self.ca_data, 'rb') as fobj:
+        with open(self.ca_path, 'rb') as fobj:
             return fobj.read()
