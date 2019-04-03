@@ -8,7 +8,7 @@ How to use PyHelm
 -----------------
 In order to install a Helm chart using PyHelm, you can perform the following steps:
 
-**Load a chart using ChartBuilder**
+**Loading a chart using ChartBuilder**
 
 .. code-block:: python
 
