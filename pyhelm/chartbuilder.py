@@ -149,8 +149,7 @@ class ChartBuilder(object):
                 filename = filename.replace("\\", "/")
 
                 with open(os.path.join(root, file), "r") as fd:
-                    chart_files.append(Any(type_url=filename,
-                                           value=fd.read().encode()))
+                    chart_files.append(Any(type_url=filename, value=fd.read()))
 
         return chart_files
 
@@ -198,7 +197,7 @@ class ChartBuilder(object):
                 templates.append(Template(name=template_name,
                                           data=open(os.path.join(root,
                                                                  tpl_file),
-                                                    'r').read().encode()))
+                                                    'r').read()))
         return templates
 
     def get_helm_chart(self):
