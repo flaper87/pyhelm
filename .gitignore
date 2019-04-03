@@ -22,3 +22,7 @@ doc/build
 # Files created by releasenotes build
 releasenotes/build
 __pycache__/
+.vagrant
+*console.log
+.vscode
+env/

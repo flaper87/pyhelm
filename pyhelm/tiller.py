@@ -23,10 +23,11 @@ class Tiller(object):
 
     _logger = logger.get_logger('Tiller')
 
-    def __init__(self, host, port=TILLER_PORT, timeout=TILLER_TIMEOUT):
+    def __init__(self, host, port=TILLER_PORT, timeout=TILLER_TIMEOUT, tls_config=None):
         # init k8s connectivity
         self._host = host
         self._port = port
+        self._tls_config = tls_config
 
         # init tiller channel
         self._channel = self.get_channel()
@@ -45,7 +46,19 @@ class Tiller(object):
         """
         Return a tiller channel
         """
-        return grpc.insecure_channel('%s:%s' % (self._host, self._port))
+
+        target = '%s:%s' % (self._host, self._port)
+
+        if self._tls_config:
+            ssl_channel_credentials = grpc.ssl_channel_credentials(
+                root_certificates=self._tls_config.ca_data,
+                private_key=self._tls_config.key_data,
+                certificate_chain=self._tls_config.cert_data
+            )
+
+            return grpc.secure_channel(target, ssl_channel_credentials)
+        else:
+            return grpc.insecure_channel(target)
 
     def tiller_status(self):
         """

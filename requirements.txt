@@ -7,4 +7,3 @@ requests
 PyYAML
 boto3
 botocore
-
