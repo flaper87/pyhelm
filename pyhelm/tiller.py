@@ -73,6 +73,8 @@ class Tiller(object):
     def list_releases(self, status_codes=None, namespace=""):
         """
         List Helm Releases
+
+        Possible status codes can be seen in the status_pb2 in part of Helm gRPC definition
         """
         releases = []
 
