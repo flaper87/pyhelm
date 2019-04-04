@@ -1,3 +1,4 @@
+import pytest
 from unittest import TestCase
 try:
     from unittest import mock
@@ -7,6 +8,7 @@ except ImportError:
 from supermutes.dot import dotify
 import pyhelm.tiller as tiller
 import pyhelm.tls as tls
+
 
 class TestTiller(TestCase):
 
@@ -31,13 +33,44 @@ class TestTiller(TestCase):
         t2 = tiller.Tiller('test')
         self.assertTrue(t2.tiller_status())
 
+
+
     @mock.patch('pyhelm.tiller.ReleaseServiceStub')
+    @mock.patch('pyhelm.tiller.ListReleasesRequest')
     @mock.patch('pyhelm.tiller.grpc')
-    def test_list_releases(self, _0, mock_release_service_stub):
+    def test_list_releases(self, _0, mock_list_release_request, mock_release_service_stub):
         mock_release_service_stub.return_value.ListReleases.return_value = [
             dotify({'next': '', 'releases': ['foo']})
         ]
         r = tiller.Tiller('test').list_releases()
+        mock_list_release_request.assert_called_with(limit=tiller.RELEASE_LIMIT, offset=None, namespace="", status_codes=[])
+        mock_release_service_stub.return_value.ListReleases.assert_called()
+        self.assertEquals(len(r), 1)
+        self.assertEquals(r[0], 'foo')
+
+    @mock.patch('pyhelm.tiller.ReleaseServiceStub')
+    @mock.patch('pyhelm.tiller.ListReleasesRequest')
+    @mock.patch('pyhelm.tiller.grpc')
+    def test_list_releases_with_namespace(self, _0, mock_list_release_request, mock_release_service_stub):
+        mock_release_service_stub.return_value.ListReleases.return_value = [
+            dotify({'next': '', 'releases': ['foo']})
+        ]
+        r = tiller.Tiller('test').list_releases(namespace="test")
+        mock_list_release_request.assert_called_with(limit=tiller.RELEASE_LIMIT, offset=None, namespace="test", status_codes=[])
+        mock_release_service_stub.return_value.ListReleases.assert_called()
+        self.assertEquals(len(r), 1)
+        self.assertEquals(r[0], 'foo')
+
+    @mock.patch('pyhelm.tiller.ReleaseServiceStub')
+    @mock.patch('pyhelm.tiller.ListReleasesRequest')
+    @mock.patch('pyhelm.tiller.grpc')
+    def test_list_releases_with_status_codes(self, _0, mock_list_release_request, mock_release_service_stub):
+        mock_release_service_stub.return_value.ListReleases.return_value = [
+            dotify({'next': '', 'releases': ['foo']})
+        ]
+        r = tiller.Tiller('test').list_releases(status_codes=["DEPLOYED", "FAILED"])
+        # See status code enum definition in hapi/status_pb2.py
+        mock_list_release_request.assert_called_with(limit=tiller.RELEASE_LIMIT, offset=None, namespace="", status_codes=[1, 4])
         mock_release_service_stub.return_value.ListReleases.assert_called()
         self.assertEquals(len(r), 1)
         self.assertEquals(r[0], 'foo')

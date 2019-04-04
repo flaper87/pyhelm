@@ -7,6 +7,7 @@ from hapi.services.tiller_pb2 import ReleaseServiceStub, ListReleasesRequest, \
     GetReleaseStatusRequest, GetReleaseContentRequest
 from hapi.chart.chart_pb2 import Chart
 from hapi.chart.config_pb2 import Config
+from hapi.release.status_pb2 import _STATUS
 
 TILLER_PORT = 44134
 TILLER_VERSION = b'2.11'
@@ -69,17 +70,29 @@ class Tiller(object):
 
         return False
 
-    def list_releases(self):
+    def list_releases(self, status_codes=None, namespace=""):
         """
         List Helm Releases
+
+        Possible status codes can be seen in the status_pb2 in part of Helm gRPC definition
         """
         releases = []
+
+        # Convert the string status codes to the their numerical values
+        if status_codes:
+            codes_enum = _STATUS.enum_types_by_name.get("Code")
+            request_status_codes = [codes_enum.values_by_name.get(code).number for code in status_codes]
+        else:
+            request_status_codes = []
 
         offset = None
         stub = ReleaseServiceStub(self._channel)
 
         while True:
-            req = ListReleasesRequest(limit=RELEASE_LIMIT, offset=offset)
+            req = ListReleasesRequest(limit=RELEASE_LIMIT,
+                                      offset=offset,
+                                      namespace=namespace,
+                                      status_codes=request_status_codes)
             release_list = stub.ListReleases(req, self._timeout,
                                              metadata=self.metadata)
 
