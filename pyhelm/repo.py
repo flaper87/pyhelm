@@ -114,7 +114,7 @@ def repo_index(repo_url, headers=None):
     """Downloads the Chart's repo index"""
     repo_scheme = urlparse(repo_url).scheme
 
-    return yaml.load(
+    return yaml.safe_load(
         _get_from_repo(
             repo_scheme,
             repo_url,

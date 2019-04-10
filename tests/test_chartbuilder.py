@@ -71,7 +71,7 @@ metadata:
                            'source': {'location': 'test',
                                       'type': 'git',
                                       'subpath': 'foo'}})
-        self.assertEquals(cb.source_directory, '/test/foo')
+        self.assertEqual(cb.source_directory, '/test/foo')
         cb._logger.info.assert_called()
         cb._logger.exception.assert_not_called()
 
@@ -79,14 +79,14 @@ metadata:
     def test_repo(self, _0):
         cb = ChartBuilder({'name': 'foo',
                            'source': {'location': 'test', 'type': 'repo'}})
-        self.assertEquals(cb.source_directory, '/test/')
+        self.assertEqual(cb.source_directory, '/test/')
         cb._logger.info.assert_called()
         cb._logger.exception.assert_not_called()
 
     def test_directory(self):
         cb = ChartBuilder({'name': 'foo',
                            'source': {'location': 'dir', 'type': 'directory'}})
-        self.assertEquals(cb.source_directory, 'dir/')
+        self.assertEqual(cb.source_directory, 'dir/')
         cb._logger.info.assert_called()
         cb._logger.exception.assert_not_called()
 
@@ -101,7 +101,7 @@ metadata:
     @mock.patch(_mock_source_clone, return_value='test')
     def test_get_files(self, _0, _1, _2):
         f = ChartBuilder({}).get_files()
-        self.assertEquals(len(f), 1)
+        self.assertEqual(len(f), 1)
         self.assertIsInstance(f[0], Any)
 
     @mock.patch(_mock_source_clone, return_value='test')
@@ -122,7 +122,7 @@ metadata:
     def test_get_templates(self, _0, _1, _2):
         t = ChartBuilder({'name': 'foo'}).get_templates()
         ChartBuilder._logger.warn.assert_called()
-        self.assertEquals(len(t), 1)
+        self.assertEqual(len(t), 1)
         self.assertIsInstance(t[0], Template)
 
     @mock.patch('pyhelm.chartbuilder.ChartBuilder.get_metadata')
@@ -135,7 +135,7 @@ metadata:
             {'name': 'bar', 'source': {}}
         ]})
         cb._helm_chart = '123'
-        self.assertEquals(cb.get_helm_chart(), '123')
+        self.assertEqual(cb.get_helm_chart(), '123')
         cb._helm_chart = None
         cb.get_helm_chart()
         cb._logger.info.assert_called()

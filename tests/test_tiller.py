@@ -45,8 +45,8 @@ class TestTiller(TestCase):
         r = tiller.Tiller('test').list_releases()
         mock_list_release_request.assert_called_with(limit=tiller.RELEASE_LIMIT, offset=None, namespace="", status_codes=[])
         mock_release_service_stub.return_value.ListReleases.assert_called()
-        self.assertEquals(len(r), 1)
-        self.assertEquals(r[0], 'foo')
+        self.assertEqual(len(r), 1)
+        self.assertEqual(r[0], 'foo')
 
     @mock.patch('pyhelm.tiller.ReleaseServiceStub')
     @mock.patch('pyhelm.tiller.ListReleasesRequest')
@@ -58,8 +58,8 @@ class TestTiller(TestCase):
         r = tiller.Tiller('test').list_releases(namespace="test")
         mock_list_release_request.assert_called_with(limit=tiller.RELEASE_LIMIT, offset=None, namespace="test", status_codes=[])
         mock_release_service_stub.return_value.ListReleases.assert_called()
-        self.assertEquals(len(r), 1)
-        self.assertEquals(r[0], 'foo')
+        self.assertEqual(len(r), 1)
+        self.assertEqual(r[0], 'foo')
 
     @mock.patch('pyhelm.tiller.ReleaseServiceStub')
     @mock.patch('pyhelm.tiller.ListReleasesRequest')
@@ -72,8 +72,8 @@ class TestTiller(TestCase):
         # See status code enum definition in hapi/status_pb2.py
         mock_list_release_request.assert_called_with(limit=tiller.RELEASE_LIMIT, offset=None, namespace="", status_codes=[1, 4])
         mock_release_service_stub.return_value.ListReleases.assert_called()
-        self.assertEquals(len(r), 1)
-        self.assertEquals(r[0], 'foo')
+        self.assertEqual(len(r), 1)
+        self.assertEqual(r[0], 'foo')
 
     @mock.patch('pyhelm.tiller.Tiller.list_releases')
     @mock.patch('pyhelm.tiller.grpc')
@@ -83,8 +83,8 @@ class TestTiller(TestCase):
                     'config': {'raw': 'foo: bar'}})
         ]
         charts = tiller.Tiller('test').list_charts()
-        self.assertEquals(len(charts), 1)
-        self.assertEquals(charts[0], ('foo', '0.1.0', 'bar', 'foo: bar'))
+        self.assertEqual(len(charts), 1)
+        self.assertEqual(charts[0], ('foo', '0.1.0', 'bar', 'foo: bar'))
 
     @mock.patch('pyhelm.tiller.ReleaseServiceStub')
     @mock.patch('pyhelm.tiller.UpdateReleaseRequest')
