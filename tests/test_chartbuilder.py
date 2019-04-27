@@ -26,7 +26,7 @@ foo:
   bar: baz
 ''')
 
-    _file = io.BytesIO(b'')
+    _file = io.StringIO('')
 
     _files_walk = (x for x in [
         ('charts', '', []),
@@ -34,7 +34,7 @@ foo:
         ('files', '', ['.helmignore', 'Chart.yaml', 'data']),
     ])
 
-    _template = io.BytesIO(b'''
+    _template = io.StringIO('''
 ---
 apiVersion: v1
 kind: Deployment
