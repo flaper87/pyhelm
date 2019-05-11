@@ -1,6 +1,7 @@
 import pyhelm.logger as logger
 import os
 import yaml
+import codecs
 
 from hapi.services.tiller_pb2 import GetReleaseContentRequest
 from hapi.chart.template_pb2 import Template
@@ -111,7 +112,7 @@ class ChartBuilder(object):
         Process metadata
         '''
         # extract Chart.yaml to construct metadata
-        with open(os.path.join(self.source_directory, 'Chart.yaml')) as fd:
+        with codecs.open(os.path.join(self.source_directory, 'Chart.yaml')) as fd:
             chart_yaml = dotify(yaml.safe_load(fd.read()))
 
         # construct Metadata object
@@ -148,8 +149,8 @@ class ChartBuilder(object):
                 # from a Windows machine the lookup will fail.
                 filename = filename.replace("\\", "/")
 
-                with open(os.path.join(root, file), "r") as fd:
-                    chart_files.append(Any(type_url=filename, value=fd.read().encode()))
+                with codecs.open(os.path.join(root, file), "r") as fd:
+                    chart_files.append(Any(type_url=filename, value=fd.read()))
 
         return chart_files
 
@@ -160,7 +161,7 @@ class ChartBuilder(object):
 
         # create config object representing unmarshaled values.yaml
         if os.path.exists(os.path.join(self.source_directory, 'values.yaml')):
-            with open(os.path.join(self.source_directory, 'values.yaml')) as fd:
+            with codecs.open(os.path.join(self.source_directory, 'values.yaml')) as fd:
                 raw_values = fd.read()
         else:
             self._logger.warn("No values.yaml in %s, using empty values",
@@ -195,9 +196,9 @@ class ChartBuilder(object):
                 template_name = template_name.replace("\\", "/")
 
                 templates.append(Template(name=template_name,
-                                          data=open(os.path.join(root,
+                                          data=codecs.open(os.path.join(root,
                                                                  tpl_file),
-                                                    'r').read().encode()))
+                                                    'r').read()))
         return templates
 
     def get_helm_chart(self):
