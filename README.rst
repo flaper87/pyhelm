@@ -14,10 +14,10 @@ In order to install a Helm chart using PyHelm, you can perform the following ste
 
     from pyhelm.chartbuilder import ChartBuilder
 
-    chart = ChartBuilder({"name": "nginx-ingress", "source": {"type": "repo", "location": "https://kubernetes-charts.storage.googleapis.com"}}) 
-    
-This will cause the chart to cloned locally, and any additional use of ``chart`` will reference the local copy.
-You can also used a local chart by using ``"type": "directory"``, as well as cloning from a git repo using ``"type": "git"``
+    chart = ChartBuilder({"name": "nginx-ingress", "source": {"type": "repo", "location": "https://kubernetes-charts.storage.googleapis.com"}})
+
+This will cause the chart to be cloned locally, and any additional use of ``chart`` will reference the local copy.
+You can also use a local chart by using ``"type": "directory"``, as well as cloning from a git repo using ``"type": "git"``
 
 **Installing a chart**
 
@@ -27,11 +27,11 @@ You can also used a local chart by using ``"type": "directory"``, as well as clo
     from pyhelm.tiller import Tiller
 
     tiller = Tiller(TILLER_HOST)
-    chart = ChartBuilder({"name": "nginx-ingress", "source": {"type": "repo", "location": "https://kubernetes-charts.storage.googleapis.com"}}) 
+    chart = ChartBuilder({"name": "nginx-ingress", "source": {"type": "repo", "location": "https://kubernetes-charts.storage.googleapis.com"}})
     tiller.install_release(chart.get_helm_chart(), dry_run=False, namespace='default')
 
 This snippet will install the ``nginx-ingress`` chart on a Kubernetes cluster where Tiller is installed (assuming ``TILLER_HOST`` points to a live Tiller instance). Take note that in most Helm installations Tiller isn't accessible in such a manner, and you will need to perform a Kubernetes port-forward operation to access Tiller.
-The ``Tiller`` class supports other operations other than installation, including release listing, release updating, release uninstallation and getting release contents.
+The ``Tiller`` class supports operations other than installation, including release listing, release updating, release uninstallation and getting release contents.
 
 Helm gRPC
 ---------
