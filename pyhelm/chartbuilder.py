@@ -115,9 +115,11 @@ class ChartBuilder(object):
         with open(os.path.join(self.source_directory, 'Chart.yaml')) as fd:
             chart_yaml = yaml.safe_load(fd.read())
 
-        assert 'apiVersion' in chart_yaml, "Chart metadata is missing a required apiVersion"
-        assert 'description' in chart_yaml, "Chart metadata is missing a required description"
-        assert 'name' in chart_yaml, "Chart metadata is missing a required name"
+        if 'apiVersion' not in chart_yaml or \
+           'version' not in chart_yaml or \
+           'name' not in chart_yaml:
+           self._logger.error("Chart missing required fields")
+           return
 
         default_chart_yaml = defaultdict(str, chart_yaml)
 
