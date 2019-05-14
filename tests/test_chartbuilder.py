@@ -15,9 +15,11 @@ from pyhelm.chartbuilder import ChartBuilder
 class TestChartBuilder(TestCase):
 
     _chart = io.StringIO('''
+apiVersion: v1
 description: testing
 name: foobar
 version: 1.2.3
+appVersion: 3.2.1
 ''')
 
     _values = io.StringIO('''
