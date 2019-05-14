@@ -10,6 +10,7 @@ from hapi.chart.config_pb2 import Config
 from google.protobuf.any_pb2 import Any
 
 from pyhelm import repo
+from collections import defaultdict
 from supermutes.dot import dotify
 
 
@@ -112,13 +113,21 @@ class ChartBuilder(object):
         '''
         # extract Chart.yaml to construct metadata
         with open(os.path.join(self.source_directory, 'Chart.yaml')) as fd:
-            chart_yaml = dotify(yaml.safe_load(fd.read()))
+            chart_yaml = yaml.safe_load(fd.read())
+
+        assert 'apiVersion' in chart_yaml, "Chart metadata is missing a required apiVersion"
+        assert 'description' in chart_yaml, "Chart metadata is missing a required description"
+        assert 'name' in chart_yaml, "Chart metadata is missing a required name"
+
+        default_chart_yaml = defaultdict(str, chart_yaml)
 
         # construct Metadata object
         return Metadata(
-            description=chart_yaml.description,
-            name=chart_yaml.name,
-            version=chart_yaml.version
+            apiVersion=default_chart_yaml['apiVersion'],
+            description=default_chart_yaml['description'],
+            name=default_chart_yaml['name'],
+            version=default_chart_yaml['version'],
+            appVersion=default_chart_yaml['appVersion']
         )
 
     def get_files(self):
