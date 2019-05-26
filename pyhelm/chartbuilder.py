@@ -115,8 +115,7 @@ class ChartBuilder(object):
         with open(os.path.join(self.source_directory, 'Chart.yaml')) as fd:
             chart_yaml = yaml.safe_load(fd.read())
 
-        if 'apiVersion' not in chart_yaml or \
-           'version' not in chart_yaml or \
+        if 'version' not in chart_yaml or \
            'name' not in chart_yaml:
            self._logger.error("Chart missing required fields")
            return
