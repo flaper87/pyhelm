@@ -42,6 +42,7 @@ apiVersion: v1
 kind: Deployment
 metadata:
   name: {{ include "foo.fullname" . }}
+  testdata: testing_dodgy_encoding
   namespace: "{{ .Values.namespace }}"
 ''')
 
@@ -92,13 +93,13 @@ metadata:
         cb._logger.info.assert_called()
         cb._logger.exception.assert_not_called()
 
-    @mock.patch('pyhelm.chartbuilder.open', return_value=_chart)
+    @mock.patch('pyhelm.chartbuilder.codecs.open', return_value=_chart)
     @mock.patch(_mock_source_clone, return_value='')
     def test_get_metadata(self, _0, _1):
         m = ChartBuilder({}).get_metadata()
         self.assertIsInstance(m, Metadata)
 
-    @mock.patch('pyhelm.chartbuilder.open', return_value=_file)
+    @mock.patch('pyhelm.chartbuilder.codecs.open', return_value=_file)
     @mock.patch('pyhelm.chartbuilder.os.walk', return_value=_files_walk)
     @mock.patch(_mock_source_clone, return_value='test')
     def test_get_files(self, _0, _1, _2):
@@ -111,14 +112,14 @@ metadata:
         ChartBuilder({}).get_values()
         ChartBuilder._logger.warn.assert_called()
 
-    @mock.patch('pyhelm.chartbuilder.open', return_value=_values)
+    @mock.patch('pyhelm.chartbuilder.codecs.open', return_value=_values)
     @mock.patch('pyhelm.chartbuilder.os.path.exists', return_value=True)
     @mock.patch(_mock_source_clone, return_value='test')
     def test_get_values(self, _0, _1, _2):
         v = ChartBuilder({}).get_values()
         self.assertIsInstance(v, Config)
 
-    @mock.patch('pyhelm.chartbuilder.open', return_value=_template)
+    @mock.patch('pyhelm.chartbuilder.codecs.open', return_value=_template)
     @mock.patch('pyhelm.chartbuilder.os.walk', return_value=_templates_walk)
     @mock.patch(_mock_source_clone, return_value='test')
     def test_get_templates(self, _0, _1, _2):
