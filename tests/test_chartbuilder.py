@@ -42,7 +42,6 @@ apiVersion: v1
 kind: Deployment
 metadata:
   name: {{ include "foo.fullname" . }}
-  testdata: testing_dodgy_encoding
   namespace: "{{ .Values.namespace }}"
 ''')
 
@@ -145,6 +144,13 @@ metadata:
 
     @mock.patch('pyhelm.chartbuilder.repo')
     def test_source_cleanup(self, mock_repo):
+        ChartBuilder({'name': 'foo',
+                      'source': {'type': 'directory', 'location': 'test'}}
+                     ).source_cleanup()
+        mock_repo.source_cleanup.assert_called()
+
+    # @mock.patch('pyhelm.chartbuilder.repo')
+    def test_foreign_encodings(self, mock_repo):
         ChartBuilder({'name': 'foo',
                       'source': {'type': 'directory', 'location': 'test'}}
                      ).source_cleanup()
