@@ -127,8 +127,8 @@ class ChartBuilder(object):
             apiVersion=default_chart_yaml['apiVersion'],
             description=default_chart_yaml['description'],
             name=default_chart_yaml['name'],
-            version=default_chart_yaml['version'],
-            appVersion=default_chart_yaml['appVersion']
+            version=str(default_chart_yaml['version']),
+            appVersion=str(default_chart_yaml['appVersion'])
         )
 
     def get_files(self):
