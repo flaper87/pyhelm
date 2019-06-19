@@ -113,7 +113,7 @@ class ChartBuilder(object):
         Process metadata
         '''
         # extract Chart.yaml to construct metadata
-        chart_yaml = yaml.safe_load(self.read_file(os.path.join(self.source_directory, 'Chart.yaml')))
+        chart_yaml = yaml.safe_load(ChartBuilder.read_file(os.path.join(self.source_directory, 'Chart.yaml')))
 
         if 'version' not in chart_yaml or \
            'name' not in chart_yaml:
@@ -158,7 +158,7 @@ class ChartBuilder(object):
                 # from a Windows machine the lookup will fail.
                 filename = filename.replace("\\", "/")
 
-                chart_files.append(Any(type_url=filename, value=self.read_file(os.path.join(root, file))))
+                chart_files.append(Any(type_url=filename, value=ChartBuilder.read_file(os.path.join(root, file))))
 
 
         return chart_files
@@ -170,7 +170,7 @@ class ChartBuilder(object):
 
         # create config object representing unmarshaled values.yaml
         if os.path.exists(os.path.join(self.source_directory, 'values.yaml')):
-            raw_values = self.read_file(os.path.join(self.source_directory, 'values.yaml'))
+            raw_values = ChartBuilder.read_file(os.path.join(self.source_directory, 'values.yaml'))
         else:
             self._logger.warn("No values.yaml in %s, using empty values",
                               self.source_directory)
@@ -204,7 +204,7 @@ class ChartBuilder(object):
                 template_name = template_name.replace("\\", "/")
 
                 templates.append(Template(name=template_name,
-                                          data=self.read_file(os.path.join(root,tpl_file))))
+                                          data=ChartBuilder.read_file(os.path.join(root,tpl_file))))
         return templates
 
     def get_helm_chart(self):
@@ -234,7 +234,7 @@ class ChartBuilder(object):
         return helm_chart
 
     @staticmethod
-    def read_file(self, path):
+    def read_file(path):
         '''
         Open the file provided in `path` and strip any non-UTF8 characters.
         Return back the cleaned content
