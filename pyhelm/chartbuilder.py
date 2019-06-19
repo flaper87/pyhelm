@@ -241,7 +241,6 @@ class ChartBuilder(object):
         '''
         with codecs.open(path, encoding='utf-8', errors='ignore') as fd:
             content = fd.read()
-            fd.close()
         return bytes(bytearray(content, encoding='utf-8'))
 
 
