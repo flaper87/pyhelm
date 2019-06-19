@@ -233,12 +233,15 @@ class ChartBuilder(object):
         self._helm_chart = helm_chart
         return helm_chart
 
+    @staticmethod
     def read_file(self, path):
         '''
         Open the file provided in `path` and strip any non-UTF8 characters.
         Return back the cleaned content
         '''
-        content = codecs.open(path, encoding='utf-8', errors='ignore').read()
+        with codecs.open(path, encoding='utf-8', errors='ignore') as fd:
+            content = fd.read()
+            fd.close()
         return bytes(bytearray(content, encoding='utf-8'))
 
 
