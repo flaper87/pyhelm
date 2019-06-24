@@ -1,6 +1,7 @@
 import pyhelm.logger as logger
 import os
 import yaml
+import codecs
 
 from hapi.services.tiller_pb2 import GetReleaseContentRequest
 from hapi.chart.template_pb2 import Template
@@ -112,8 +113,7 @@ class ChartBuilder(object):
         Process metadata
         '''
         # extract Chart.yaml to construct metadata
-        with open(os.path.join(self.source_directory, 'Chart.yaml')) as fd:
-            chart_yaml = yaml.safe_load(fd.read())
+        chart_yaml = yaml.safe_load(ChartBuilder.read_file(os.path.join(self.source_directory, 'Chart.yaml')))
 
         if 'version' not in chart_yaml or \
            'name' not in chart_yaml:
@@ -158,8 +158,8 @@ class ChartBuilder(object):
                 # from a Windows machine the lookup will fail.
                 filename = filename.replace("\\", "/")
 
-                with open(os.path.join(root, file), "r") as fd:
-                    chart_files.append(Any(type_url=filename, value=fd.read().encode()))
+                chart_files.append(Any(type_url=filename, value=ChartBuilder.read_file(os.path.join(root, file))))
+
 
         return chart_files
 
@@ -170,8 +170,7 @@ class ChartBuilder(object):
 
         # create config object representing unmarshaled values.yaml
         if os.path.exists(os.path.join(self.source_directory, 'values.yaml')):
-            with open(os.path.join(self.source_directory, 'values.yaml')) as fd:
-                raw_values = fd.read()
+            raw_values = ChartBuilder.read_file(os.path.join(self.source_directory, 'values.yaml'))
         else:
             self._logger.warn("No values.yaml in %s, using empty values",
                               self.source_directory)
@@ -205,9 +204,7 @@ class ChartBuilder(object):
                 template_name = template_name.replace("\\", "/")
 
                 templates.append(Template(name=template_name,
-                                          data=open(os.path.join(root,
-                                                                 tpl_file),
-                                                    'r').read().encode()))
+                                          data=ChartBuilder.read_file(os.path.join(root,tpl_file))))
         return templates
 
     def get_helm_chart(self):
@@ -235,6 +232,17 @@ class ChartBuilder(object):
 
         self._helm_chart = helm_chart
         return helm_chart
+
+    @staticmethod
+    def read_file(path):
+        '''
+        Open the file provided in `path` and strip any non-UTF8 characters.
+        Return back the cleaned content
+        '''
+        with codecs.open(path, encoding='utf-8', errors='ignore') as fd:
+            content = fd.read()
+        return bytes(bytearray(content, encoding='utf-8'))
+
 
     def dump(self):
         '''
