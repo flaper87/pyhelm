@@ -10,7 +10,7 @@ from hapi.chart.config_pb2 import Config
 from hapi.release.status_pb2 import _STATUS
 
 TILLER_PORT = 44134
-TILLER_VERSION = b'2.11'
+TILLER_VERSION = b'2.14'
 TILLER_TIMEOUT = 300
 RELEASE_LIMIT = 64
 DEFAULT_NAMESPACE = "default"
