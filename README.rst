@@ -35,7 +35,7 @@ The ``Tiller`` class supports other operations other than installation, includin
 
 Helm gRPC
 ---------
-The helm gRPC libraries are located in the hapi directory.  They were generated with the grpc_tools.protoc utility against Helm 2.11.  Should you wish to re-generate them you can easily do so:
+The helm gRPC libraries are located in the hapi directory.  They were generated with the grpc_tools.protoc utility against Helm 2.14.  Should you wish to re-generate them you can easily do so:
 
 .. code-block:: shell
 
