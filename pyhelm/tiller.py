@@ -2,10 +2,9 @@ import grpc
 import yaml
 import pyhelm.logger as logger
 
-from hapi.services.tiller_pb2 import ListReleasesRequest, \
+from hapi.services.tiller_pb2 import ReleaseServiceStub, ListReleasesRequest, \
     InstallReleaseRequest, UpdateReleaseRequest, UninstallReleaseRequest, \
     GetReleaseStatusRequest, GetReleaseContentRequest
-from hapi.services.tiller_pb2_grpc import ReleaseServiceStub
 from hapi.chart.chart_pb2 import Chart
 from hapi.chart.config_pb2 import Config
 from hapi.release.status_pb2 import _STATUS
