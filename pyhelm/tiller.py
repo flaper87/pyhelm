@@ -51,6 +51,11 @@ class Tiller(object):
 
         target = '%s:%s' % (self._host, self._port)
 
+        options = (("grpc.keepalive_time_ms", 30000),
+                   ("grpc.http2.max_pings_without_data", 0),
+                   ("grpc.keepalive_permit_without_calls", 1),
+                   ("grpc.http2.min_time_between_pings_ms", 30000))
+
         if self._tls_config:
             ssl_channel_credentials = grpc.ssl_channel_credentials(
                 root_certificates=self._tls_config.ca_data,
@@ -58,9 +63,9 @@ class Tiller(object):
                 certificate_chain=self._tls_config.cert_data
             )
 
-            return grpc.secure_channel(target, ssl_channel_credentials)
+            return grpc.secure_channel(target, ssl_channel_credentials, options=options)
         else:
-            return grpc.insecure_channel(target)
+            return grpc.insecure_channel(target, options=options)
 
     def tiller_status(self):
         """
