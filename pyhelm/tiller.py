@@ -51,10 +51,12 @@ class Tiller(object):
 
         target = '%s:%s' % (self._host, self._port)
 
-        options = (("grpc.keepalive_time_ms", 30000),
+        # Despite Helm sets grpc keep alive to 30 seconds, it handles grpc "too_many_pings" errors
+        # which we don't want to handle. Setting it to 30 seconds will cause such an error at times.
+        options = (("grpc.keepalive_time_ms", 60000),
+                   ("grpc.http2.min_time_between_pings_ms", 60000),
                    ("grpc.http2.max_pings_without_data", 0),
-                   ("grpc.keepalive_permit_without_calls", 1),
-                   ("grpc.http2.min_time_between_pings_ms", 30000))
+                   ("grpc.keepalive_permit_without_calls", 1))
 
         if self._tls_config:
             ssl_channel_credentials = grpc.ssl_channel_credentials(
