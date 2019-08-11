@@ -10,6 +10,7 @@ try:
     from urllib.parse import urlparse
 except ImportError:
     from urlparse import urlparse
+from posixpath import join as urljoin # https://stackoverflow.com/a/15279799
 
 
 class HTTPGetError(RuntimeError):
@@ -52,7 +53,7 @@ def _get_from_http(repo_url, file_url, **kwargs):
     """Downloads the Chart's repo index from HTTP(S)"""
 
     if not bool(urlparse(file_url).netloc):
-        file_url = os.path.join(repo_url, file_url)
+        file_url = urljoin(repo_url, file_url)
 
     index = requests.get(file_url, **kwargs)
     if index.status_code >= 400:
@@ -74,7 +75,7 @@ def _get_from_s3(repo_url, file_url):
     # URLs (guess due to its multi-tenancy), so
     # turning them into absolute is needed.
     if not bool(urlparse(file_url).netloc):
-        file_url = os.path.join(repo_url, file_url)
+        file_url = urljoin(repo_url, file_url)
 
     file_url_parsed = urlparse(file_url)
 
