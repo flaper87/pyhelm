@@ -5,7 +5,7 @@ import pyhelm.logger as logger
 from hapi.services.tiller_pb2 import ReleaseServiceStub, ListReleasesRequest, \
     InstallReleaseRequest, UpdateReleaseRequest, UninstallReleaseRequest, \
     GetReleaseStatusRequest, GetReleaseContentRequest
-from hapi.chart.chart_pb2 import Chart
+from hapi.services.tiller_pb2_grpc import ReleaseServiceStub
 from hapi.chart.config_pb2 import Config
 from hapi.release.status_pb2 import _STATUS
 
@@ -14,6 +14,9 @@ TILLER_VERSION = b'2.11'
 TILLER_TIMEOUT = 300
 RELEASE_LIMIT = 64
 DEFAULT_NAMESPACE = "default"
+GRPC_MAX_RECEIVE_MESSAGE_LENGTH = 1024*1024*50
+GRPC_KEEPALIVE_TIME_MS = 60000
+GRPC_MIN_TIME_BETWEEN_PINGS_MS = 60000
 
 
 class Tiller(object):
@@ -52,10 +55,13 @@ class Tiller(object):
 
         # Despite Helm sets grpc keep alive to 30 seconds, it handles grpc "too_many_pings" errors
         # which we don't want to handle. Setting it to 30 seconds will cause such an error at times.
-        options = (("grpc.keepalive_time_ms", 60000),
-                   ("grpc.http2.min_time_between_pings_ms", 60000),
-                   ("grpc.http2.max_pings_without_data", 0),
-                   ("grpc.keepalive_permit_without_calls", 1))
+        options = (
+            ("grpc.keepalive_time_ms", GRPC_KEEPALIVE_TIME_MS),
+            ("grpc.http2.min_time_between_pings_ms", GRPC_MIN_TIME_BETWEEN_PINGS_MS),
+            ("grpc.http2.max_pings_without_data", 0),
+            ("grpc.keepalive_permit_without_calls", 1),
+            ("grpc.max_receive_message_length", GRPC_MAX_RECEIVE_MESSAGE_LENGTH)
+        )
 
         if self._tls_config:
             ssl_channel_credentials = grpc.ssl_channel_credentials(
