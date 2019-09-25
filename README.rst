@@ -35,15 +35,15 @@ The ``Tiller`` class supports other operations other than installation, includin
 
 
 Package versions
----------
+----------------
 In order to support multiple versions of Helm versions, which in turn require different gRPC prototypes, we maintain different PyHelm package versions.
 
-================== ==================
-Helm version       PyHelm dependency version
------------------- ------------------
-2.11 (and lower)   pyhelm>=2.11,<2.12
-2.14               pyhelm>=2.14,<2.15
-================== ==================
+========================= =========================
+Helm version              PyHelm dependency version
+------------------------- -------------------------
+2.11 (and lower)          pyhelm>=2.11,<2.12
+2.14                      pyhelm>=2.14,<2.15
+========================= =========================
 
 Additional Helm versions can be supported as shown in the following section.
 
