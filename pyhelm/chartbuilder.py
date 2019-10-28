@@ -58,7 +58,11 @@ class ChartBuilder(object):
 
         subpath = self.chart.source.get('subpath', '')
 
-        if not 'type' in self.chart.source:
+        if 'name' not in self.chart:
+            self._logger.exception("Please specify name for the chart")
+            return
+
+        if 'type' not in self.chart.source:
             self._logger.exception("Need source type for chart %s",
                                    self.chart.name)
             return
