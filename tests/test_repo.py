@@ -110,3 +110,25 @@ entries:
             {'Error': {'Code': ''}}, '')
         with self.assertRaises(ClientError):
             repo._get_from_repo('s3', 'test', 'foo')
+
+    def test_get_from_gcs_ok(self, mocked_gcsclient):
+        repo._get_from_repo('gcs', 'test', 'bar')
+        mocked_gcsclient.return_value.get_object.assert_called()
+
+    def test_get_from_gcs_repo_error(self, mocked_gcsclient):
+        mocked_gcsclient.return_value.get_object.side_effect = ClientError(
+            {'Error': {'Code': 'NoSuchBucket'}}, '')
+        with self.assertRaises(repo.RepositoryError):
+            repo._get_from_repo('gcs', 'test', 'foo')
+
+    def test_get_from_gcs_chart_error(self, mocked_gcsclient):
+        mocked_gcsclient.return_value.get_object.side_effect = ClientError(
+            {'Error': {'Code': 'NoSuchKey'}}, '')
+        with self.assertRaises(repo.ChartError):
+            repo._get_from_repo('gcs', 'test', 'foo')
+
+    def test_get_from_gcs_client_error(self, mocked_gcsclient):
+        mocked_gcsclient.return_value.get_object.side_effect = ClientError(
+            {'Error': {'Code': ''}}, '')
+        with self.assertRaises(ClientError):
+            repo._get_from_repo('gcs', 'test', 'foo')

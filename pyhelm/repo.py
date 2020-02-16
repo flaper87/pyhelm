@@ -10,7 +10,7 @@ try:
     from urllib.parse import urlparse
 except ImportError:
     from urlparse import urlparse
-from posixpath import join as urljoin # https://stackoverflow.com/a/15279799
+from posixpath import join as urljoin  # https://stackoverflow.com/a/15279799
 
 
 class HTTPGetError(RuntimeError):
@@ -49,6 +49,7 @@ class RepositoryError(RuntimeError):
 def _semver_sorter(x):
     return list(map(int, ''.join(i for i in x['version'] if i in '0123456789.').split('.')))
 
+
 def _get_from_http(repo_url, file_url, **kwargs):
     """Downloads the Chart's repo index from HTTP(S)"""
 
@@ -59,6 +60,7 @@ def _get_from_http(repo_url, file_url, **kwargs):
     if index.status_code >= 400:
         raise HTTPGetError(file_url, index.status_code, index.text)
     return index.content
+
 
 def _get_from_s3(repo_url, file_url):
     """Download the index / Chart from S3 bucket"""
@@ -94,9 +96,30 @@ def _get_from_s3(repo_url, file_url):
         else:
             raise
 
+
+def _get_from_gcs(repo_url, file_url):
+    """
+    Download the index / Chart from GCS bucket
+
+    https://bucket-name.storage.googleapis.com/
+    """
+    from google.cloud import storage
+
+    repo_url_parsed = urlparse(repo_url)
+    bucket_name = repo_url_parsed.netloc
+
+    file_url_parsed = urlparse(file_url)
+    file_name = file_url_parsed.path.strip("/")
+
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(bucket_name)
+    blob = bucket.blob(file_name)
+
+    return blob.download_as_string()
+
+
 def _get_from_repo(repo_scheme, repo_url, file_url, **kwargs):
     """Wrap download from specific repository"""
-
     if repo_scheme == 's3':
         return _get_from_s3(
             repo_url,
@@ -108,8 +131,11 @@ def _get_from_repo(repo_scheme, repo_url, file_url, **kwargs):
             file_url,
             **kwargs
         )
+    elif repo_scheme == "gs":
+        return _get_from_gcs(repo_url, file_url)
     else:
         raise SchemeError(repo_scheme.upper())
+
 
 def repo_index(repo_url, headers=None):
     """Downloads the Chart's repo index"""
@@ -123,6 +149,7 @@ def repo_index(repo_url, headers=None):
             headers=headers,
         )
     )
+
 
 def from_repo(repo_url, chart, version=None, headers=None):
     """Downloads the chart from a repo to a temporary dir, the path of which is
@@ -165,7 +192,7 @@ def git_clone(repo_url, branch='master', path=''):
     """clones repo to a temporary dir, the path of which is determined by the platform"""
 
     _tmp_dir = tempfile.mkdtemp(prefix='pyhelm-')
-    repo = Repo.clone_from(repo_url, _tmp_dir, branch=branch)
+    Repo.clone_from(repo_url, _tmp_dir, branch=branch)
 
     return os.path.join(_tmp_dir, path)
 
